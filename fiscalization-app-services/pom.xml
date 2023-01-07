@@ -6,7 +6,12 @@
 
   <groupId>hr.unizg.fer.sudec.karlo</groupId>
   <artifactId>fiscalization-app-services</artifactId>
+  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
+
+  <modules>
+    <module>catalog-management</module>
+  </modules>
 
   <name>fiscalization-app-services</name>
   <url>https://github.com/Svudec/fiscalization-app</url>
