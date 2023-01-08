@@ -11,6 +11,7 @@
 
   <modules>
     <module>catalog-management</module>
+      <module>fiscalization-service</module>
   </modules>
 
   <name>fiscalization-app-services</name>
