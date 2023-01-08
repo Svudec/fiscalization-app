@@ -12,6 +12,7 @@
   <modules>
     <module>catalog-management</module>
       <module>fiscalization-service</module>
+      <module>message-queue</module>
   </modules>
 
   <name>fiscalization-app-services</name>
