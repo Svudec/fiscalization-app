@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class CatalogItemService {
-
+    private final CatalogItemRepository itemRepository;
     private final ModelMapper mapper;
     public void createItem(CatalogItemDTO dto) {
         CatalogItem newItem = new CatalogItem();
         mapper.map(dto, newItem);
-        //todo: save to repo
+        itemRepository.save(newItem);
     }
 }
