@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\FiscalizationNetCore.WebApi.props" />
-</Project>
