@@ -1,5 +1,6 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity;
 
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "invoice")
@@ -46,9 +48,6 @@ public class Invoice {
     @Column(name = "note")
     private String note;
 
-    @Column(name = "price_format")
-    private String priceFormat;
-
     @Column(name = "in_total")
     private Double inTotal;
 
@@ -60,4 +59,7 @@ public class Invoice {
 
     @Column(name = "qr_code")
     private String qrCode;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL)
+    private List<InvoiceItem> invoiceItems;
 }
