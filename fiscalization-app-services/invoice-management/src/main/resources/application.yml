@@ -28,4 +28,5 @@ rabbitmq:
     to-fiscalization: fiscalization.queue.to
     fiscalization-result: fiscalization.queue.result
   routing-keys:
-    internal-fiscalization: internal.fiscalization.routing-key
+    internal-to-fiscalization: internal.to-fiscalization.routing-key
+    internal-fiscalization-result: internal.fiscalization-result.routing-key

@@ -1,16 +1,23 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service;
 
+import hr.unizg.fer.sudec.karlo.amqp.RabbitMqMessageProducer;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatus;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.FiscalizationRequestModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.InvoiceItemRepository;
+import hr.unizg.fer.sudec.karlo.invoiceManager.messageQueue.QueueParamsService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.amqp.core.Queue;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -19,6 +26,9 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ModelMapper mapper;
     private final InvoiceItemRepository itemRepository;
+    private final RabbitMqMessageProducer messageProducer;
+
+    private final QueueParamsService queueParamsService;
 
     public List<InvoiceModel> getAllInvoices() {
         return mapper.map(invoiceRepository.findAll(), new TypeToken<List<InvoiceModel>>() {}.getType());
@@ -34,7 +44,10 @@ public class InvoiceService {
         invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.U_OBRADI);
         invoiceRepository.save(invoice);
         addItemsToInvoice(model, invoice);
-        //TODO: add to fiscalization queue
+        messageProducer.publish(
+                fromInvoice(invoice),
+                queueParamsService.getInternalExchange(),
+                queueParamsService.getToFiscalizationInternalRoutingKey());
         return mapper.map(invoice, InvoiceModel.class);
     }
 
@@ -52,6 +65,11 @@ public class InvoiceService {
         invoiceRepository.deleteById(id);
     }
 
+    public void handleFiscalizationResult(String fiscalizationResult){
+        //TODO: handle result (error/success)
+        //generate fiscalization qr code => qrCodeService.generateFiscalInvoiceQrCode(invoice);
+    }
+
     private void addItemsToInvoice(InvoiceModel model, Invoice invoice) {
         List<InvoiceItem> items = mapper.map(model.getInvoiceItems(), new TypeToken<List<InvoiceItem>>() {}.getType());
         items.forEach(p -> p.setInvoice(invoice));
@@ -59,8 +77,22 @@ public class InvoiceService {
         invoiceRepository.save(invoice);
     }
 
-    public void handleFiscalizationResult(String fiscalizationResult){
-        //TODO: handle result (error/success)
-        //generate fiscalization qr code => qrCodeService.generateFiscalInvoiceQrCode(invoice);
+    private FiscalizationRequestModel fromInvoice(Invoice invoice){
+        return FiscalizationRequestModel.builder()
+                .oib("21233832319")
+                .brojcanaOznakaRacuna("2009-" + invoice.getInvoiceNumber())
+                .oznakaPoslovnogProstora("1")
+                .oznakaNaplatnogUredaja("1")
+                .datVrijeme(invoice.getInvoiceDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy'T'HH:mm:ss")))
+                .nacinPlacanja(invoice.getPaymentType().getCode())
+                .naknadnaDostava(false)
+                .oibOperatera("21233832319")
+                .oznakaSlijednosti("P")
+                .stopaPdv(25.0)
+                .osnovica(12.0)
+                .iznos(3.0)
+                .ukupanIznos(15.0)
+                .uSustavuPdva(true)
+                .build();
     }
 }

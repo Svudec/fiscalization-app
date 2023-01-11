@@ -21,8 +21,11 @@ public class FiscalizationQueuesConfig {
     @Value("${rabbitmq.queues.fiscalization-result}")
     private String fiscalizationResultQueue;
 
-    @Value("${rabbitmq.routing-keys.internal-fiscalization}")
-    private String fiscalizationInternalRoutingKey;
+    @Value("${rabbitmq.routing-keys.internal-to-fiscalization}")
+    private String toFiscalizationInternalRoutingKey;
+
+    @Value("${rabbitmq.routing-keys.internal-fiscalization-result}")
+    private String fiscalizationResultInternalRoutingKey;
 
     @Bean
     public TopicExchange internalTopicExchange() {
@@ -44,7 +47,7 @@ public class FiscalizationQueuesConfig {
         return BindingBuilder
                 .bind(toFiscalizationQueue())
                 .to(internalTopicExchange())
-                .with(this.fiscalizationInternalRoutingKey);
+                .with(this.toFiscalizationInternalRoutingKey);
     }
 
     @Bean
@@ -52,6 +55,6 @@ public class FiscalizationQueuesConfig {
         return BindingBuilder
                 .bind(fiscalizationResultQueue())
                 .to(internalTopicExchange())
-                .with(this.fiscalizationInternalRoutingKey);
+                .with(this.fiscalizationResultInternalRoutingKey);
     }
 }
