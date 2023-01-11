@@ -2,8 +2,8 @@ namespace FiscalizationNetCore.WebApi
 {
     public class FiscalizationModel
     {
-        public string Oib { get; set; } 
-        
+        public string Oib { get; set; } = "21233832319"; //FIRA OIB
+
         public string brojcanaOznakaRacuna { get; set; }
 
         public string oznakaPoslovnogProstora { get; set; }
