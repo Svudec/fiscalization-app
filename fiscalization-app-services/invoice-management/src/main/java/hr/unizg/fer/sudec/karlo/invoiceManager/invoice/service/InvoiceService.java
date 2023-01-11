@@ -1,5 +1,6 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service;
 
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatus;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
@@ -30,6 +31,7 @@ public class InvoiceService {
 
     public InvoiceModel createInvoice(InvoiceModel model) {
         Invoice invoice = mapper.map(model, Invoice.class);
+        invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.U_OBRADI);
         invoiceRepository.save(invoice);
         addItemsToInvoice(model, invoice);
         //TODO: add to fiscalization queue

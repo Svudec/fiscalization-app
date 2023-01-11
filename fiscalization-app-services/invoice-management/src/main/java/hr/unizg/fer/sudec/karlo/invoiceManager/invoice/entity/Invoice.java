@@ -4,7 +4,6 @@ import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,8 +20,6 @@ public class Invoice {
     private Long id;
 
     @Column(name = "invoice_fiscalization_status")
-    @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
     private FiscalizationStatus invoiceFiscalizationStatus;
 
     @Column(name = "invoice_date")
@@ -32,8 +29,6 @@ public class Invoice {
     private String invoiceNumber;
 
     @Column(name = "payment_type")
-    @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
     private PaymentType paymentType;
 
     @Column(name = "created_by")
