@@ -26,7 +26,7 @@ namespace FiscalizationNetCore.WebApi.Controllers
         [HttpPost("zki")]
         public Object Zki(FiscalizationModel model)
         {
-            var invoice = ModelToRacunType(model);
+            var invoice = model.ToRacunType();
 
             _fiscalizationService.GenerateZki(invoice);
 
@@ -39,7 +39,7 @@ namespace FiscalizationNetCore.WebApi.Controllers
         [HttpPost]
         public async Task<ObjectResult> Post(FiscalizationModel model)
         {
-            var invoice = ModelToRacunType(model);
+            var invoice = model.ToRacunType();
 
             var result = await _fiscalizationService.SendInvoiceAsync(invoice);
             result.Zki = invoice.ZastKod;
@@ -53,42 +53,5 @@ namespace FiscalizationNetCore.WebApi.Controllers
 
             return Ok(result);
         }
-
-        #region Helpers
-
-        private static RacunType ModelToRacunType(FiscalizationModel model)
-        {
-            Enum.TryParse(model.nacinPlacanja, out NacinPlacanjaType nacinPlacanja);
-            Enum.TryParse(model.oznakaSlijednosti, out OznakaSlijednostiType oznakaSlijednosti);
-
-            var invoice = new RacunType
-            {
-                BrRac = new BrojRacunaType
-                {
-                    BrOznRac = model.brojcanaOznakaRacuna,
-                    OznPosPr = model.oznakaPoslovnogProstora,
-                    OznNapUr = model.oznakaNaplatnogUredaja
-                },
-                DatVrijeme = model.datVrijeme,
-                IznosUkupno = model.ukupanIznos.ToString("0.00", CultureInfo.InvariantCulture),
-                NacinPlac = nacinPlacanja,
-                NakDost = model.naknadnaDostava,
-                Oib = model.Oib,
-                OibOper = model.Oib,
-                OznSlijed = oznakaSlijednosti,
-                Pdv = new[]
-                {
-                    new PorezType
-                    {
-                        Stopa = model.stopaPdv.ToString("0.00", CultureInfo.InvariantCulture),
-                        Osnovica = model.osnovica.ToString("0.00", CultureInfo.InvariantCulture),
-                        Iznos = model.iznos.ToString("0.00", CultureInfo.InvariantCulture),
-                    }
-                },
-                USustPdv = model.uSustavuPdva
-            };
-            return invoice;
-        }
-        #endregion
     }
 }

@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
 using FiscalizationNetCore.WebApi.Abstractions;
+using FiscalizationNetCore.WebApi.RabbitMQ;
 using FiscalizationNetCore.WebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using ServiceReference;
 
 namespace FiscalizationNetCore.WebApi
@@ -54,6 +56,16 @@ namespace FiscalizationNetCore.WebApi
                 return client;
             });
             services.AddSingleton<ICertificateService>(x => new CertificateService(Configuration));
+            //RabbitMq connection
+            services.AddSingleton(serviceProvider =>
+        {
+            var uri = new Uri(Configuration["AppSettings:RabbitMqURL"]);
+            return new ConnectionFactory
+            {
+                Uri = uri
+            };
+        });
+            services.AddHostedService<RabbitMqListener>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
