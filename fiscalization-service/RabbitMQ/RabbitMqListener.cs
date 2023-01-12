@@ -6,6 +6,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using ServiceReference;
 using System;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -37,12 +38,12 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
 
             _channel = _connection.CreateModel();
 
-            _channel.QueueDeclare(
-                queue: "fiscalization.queue.to",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+            //_channel.QueueDeclare(
+            //    queue: "fiscalization.queue.to",
+            //    durable: true,
+            //    exclusive: false,
+            //    autoDelete: false,
+            //    arguments: null);
 
             _mqPublisher = new RabbitMqPublisher(connectionFactory);
             _serviceProvider = serviceProvider;
@@ -100,7 +101,8 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
                 if (result.Greske != null)
                 {
                     response.Success = false;
-                    response.Message = result.Greske.ToString();
+                    response.Message = String.Join("; ",
+                        result.Greske.Select(x => $"{x.SifraGreske} - {x.PorukaGreske}").ToArray());
                 }
                 else
                 {

@@ -1,8 +1,5 @@
 ﻿using RabbitMQ.Client;
-using System;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace FiscalizationNetCore.WebApi.RabbitMQ
 {
@@ -18,10 +15,6 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
         {
             var connection = _connectionFactory.CreateConnection();
             var channel = connection.CreateModel();
-
-            channel.ExchangeDeclare(exchange: exchange, type: "topic", durable: true, autoDelete: false);
-            channel.QueueDeclare(queue: queue, durable: true, autoDelete: false);
-            channel.ExchangeBind(source: queue, destination: exchange, routingKey: routingKey);
 
             channel.BasicPublish(exchange: exchange,
                 routingKey: routingKey,

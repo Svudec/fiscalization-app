@@ -16,7 +16,7 @@ public class Consumers {
 
     @RabbitListener(queues = "${rabbitmq.queues.fiscalization-result}")
     public void fiscalizationResultConsumer(FiscalizationResultModel fiscalizationResult){
-        log.info("Consumed {} from fiscalization-result queue", fiscalizationResult);
+        log.info("Consumed from fiscalization-result queue. Message: {}", fiscalizationResult.getMessage());
         invoiceService.handleFiscalizationResult(fiscalizationResult);
     }
 }
