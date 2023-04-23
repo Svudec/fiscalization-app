@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using ServiceReference;
 using System;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
         private IModel _channel;
         private RabbitMqPublisher _mqPublisher;
 
+        private bool _rabbitMQUnreachable = false;
+
         // initialize the connection, channel and queue 
         // inside the constructor to persist them 
         // for until the service (or the application) runs
@@ -32,26 +35,38 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
             ICertificateService certificateService)
         {
 
-            _factory = connectionFactory;
+            try
+            {
+                _factory = connectionFactory;
 
-            _connection = _factory.CreateConnection();
+                _connection = _factory.CreateConnection();
 
-            _channel = _connection.CreateModel();
+                _channel = _connection.CreateModel();
 
-            //_channel.QueueDeclare(
-            //    queue: "fiscalization.queue.to",
-            //    durable: true,
-            //    exclusive: false,
-            //    autoDelete: false,
-            //    arguments: null);
+                //_channel.QueueDeclare(
+                //    queue: "fiscalization.queue.to",
+                //    durable: true,
+                //    exclusive: false,
+                //    autoDelete: false,
+                //    arguments: null);
 
-            _mqPublisher = new RabbitMqPublisher(connectionFactory);
-            _serviceProvider = serviceProvider;
-            _certificateService = certificateService;
+                _mqPublisher = new RabbitMqPublisher(connectionFactory);
+                _serviceProvider = serviceProvider;
+                _certificateService = certificateService;
+            }
+            catch (BrokerUnreachableException)
+            {
+
+                _rabbitMQUnreachable = true;
+            }
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            // if rabbitMQ unreachable do nothing
+            if(_rabbitMQUnreachable)
+                return Task.CompletedTask;
+                
             // when the service is stopping dispose
             if (stoppingToken.IsCancellationRequested)
             {
@@ -64,7 +79,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
             var consumer = new EventingBasicConsumer(_channel);
 
             // handle the Received event on the consumer when there's a new message
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 // read the message bytes
                 var body = Encoding.UTF8.GetString(ea.Body.ToArray());
@@ -74,7 +89,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
 
                 var invoice = obj.ToRacunType();
 
-                fiscalizeAsync(invoice, stoppingToken);
+                await fiscalizeAsync(invoice, stoppingToken);
                 
             };
 
