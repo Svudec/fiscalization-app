@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading.Tasks;
 using FiscalizationNetCore.WebApi.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ServiceReference;
 
 namespace FiscalizationNetCore.WebApi.Controllers
 {
