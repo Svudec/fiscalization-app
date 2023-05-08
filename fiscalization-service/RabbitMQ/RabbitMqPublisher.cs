@@ -6,6 +6,10 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
     public class RabbitMqPublisher
     {
         private readonly ConnectionFactory _connectionFactory;
+        private readonly JsonSerializerOptions jso = new()
+        {
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
         public RabbitMqPublisher(ConnectionFactory connectionFactory) 
         {
             _connectionFactory = connectionFactory;
@@ -19,7 +23,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
             channel.BasicPublish(exchange: exchange,
                 routingKey: routingKey,
                 basicProperties: null,
-                body: JsonSerializer.SerializeToUtf8Bytes(payload));
+                body: JsonSerializer.SerializeToUtf8Bytes(payload, jso));
 
             channel.Close();
             connection.Close();
