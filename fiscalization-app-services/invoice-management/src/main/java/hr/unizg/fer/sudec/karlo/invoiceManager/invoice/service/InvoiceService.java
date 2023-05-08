@@ -84,7 +84,7 @@ public class InvoiceService {
     private FiscalizationRequestModel fromInvoice(Invoice invoice){
         return FiscalizationRequestModel.builder()
                 .oib("21233832319")
-                .brojcanaOznakaRacuna("2009-" + invoice.getInvoiceNumber())
+                .brojcanaOznakaRacuna(invoice.getInvoiceNumber())
                 .oznakaPoslovnogProstora("1")
                 .oznakaNaplatnogUredaja("1")
                 .datVrijeme(invoice.getInvoiceDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy'T'HH:mm:ss")))
