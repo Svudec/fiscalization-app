@@ -124,7 +124,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
                     response.Success = true;
                 }
 
-                _mqPublisher.Publish(payload: response,
+                _mqPublisher.Publish(payload: response.ToString(),
                     exchange: "internal.exchange",
                     queue: "fiscalization.queue.result",
                     routingKey: "internal.fiscalization-result.routing-key");
