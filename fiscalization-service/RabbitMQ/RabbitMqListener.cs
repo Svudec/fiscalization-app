@@ -122,6 +122,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
                 else
                 {
                     response.Success = true;
+                    response.Message = $"JIR:{result.Jir};ZKI:{result.Zki}";
                 }
 
                 _mqPublisher.Publish(payload: response.ToString(),
