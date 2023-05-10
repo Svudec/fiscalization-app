@@ -112,7 +112,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
 
                 Console.WriteLine($"Zki: {result.Zki}, Jir: {result.Jir}");
 
-                FiscalizationResponseModel response = new FiscalizationResponseModel();
+                FiscalizationResponseModel response = new() { InvoiceId=invoice.BrRac.BrOznRac };
                 if (result.Greske != null)
                 {
                     response.Success = false;
