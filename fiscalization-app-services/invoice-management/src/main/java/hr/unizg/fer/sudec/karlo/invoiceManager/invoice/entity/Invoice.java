@@ -4,6 +4,7 @@ import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Invoice {
     private LocalDateTime invoiceDate;
 
     @Column(name = "invoice_number")
+    @UniqueElements
     private String invoiceNumber;
 
     @Column(name = "payment_type")
