@@ -1,4 +1,5 @@
 ﻿using RabbitMQ.Client;
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -20,6 +21,7 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
             var channel = connection.CreateModel();
 
             string body = HttpUtility.JavaScriptStringEncode(payload.Replace("\n", " "));
+            Console.WriteLine("\nŠaljem: " + body);
 
             channel.BasicPublish(exchange: exchange,
                 routingKey: routingKey,

@@ -4,9 +4,10 @@ import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -27,10 +28,11 @@ public class Invoice {
     private String fiscalizationMessage;
 
     @Column(name = "invoice_date")
+    @NotNull
     private LocalDateTime invoiceDate;
 
-    @Column(name = "invoice_number")
-    @UniqueElements
+    @Column(name = "invoice_number", unique = true)
+    @NotBlank
     private String invoiceNumber;
 
     @Column(name = "payment_type")
