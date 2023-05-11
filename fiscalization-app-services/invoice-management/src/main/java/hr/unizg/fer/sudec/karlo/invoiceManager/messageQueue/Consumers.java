@@ -19,6 +19,6 @@ public class Consumers {
     public void fiscalizationResultConsumer(String result){
         log.info("Consumed from fiscalization-result queue. Message: {}", result);
         String[] splitted = result.split("##razmak##");
-        invoiceService.handleFiscalizationResult(splitted[0], splitted[1].equals("True"), splitted[3]);
+        invoiceService.handleFiscalizationResult(splitted[0], splitted[1].equals("True"), splitted[2]);
     }
 }
