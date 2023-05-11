@@ -5,7 +5,7 @@ public enum FiscalizationStatus{
 
         private final String code;
 
-        private FiscalizationStatus(String code){
+        FiscalizationStatus(String code){
                 this.code = code;
         }
 
