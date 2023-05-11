@@ -11,8 +11,7 @@
 
   <modules>
     <module>catalog-management</module>
-      <module>fiscalization-service</module>
-      <module>message-queue</module>
+    <module>message-queue</module>
     <module>invoice-management</module>
   </modules>
 
