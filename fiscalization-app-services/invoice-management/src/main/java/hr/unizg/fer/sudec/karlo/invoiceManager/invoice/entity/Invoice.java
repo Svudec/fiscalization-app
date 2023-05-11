@@ -1,20 +1,20 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity;
 
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "invoice")
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id", callSuper = false)
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,9 @@ public class Invoice {
 
     @Column(name = "invoice_fiscalization_status")
     private FiscalizationStatus invoiceFiscalizationStatus;
+
+    @Column(name = "invoice_fiscalization_message")
+    private String fiscalizationMessage;
 
     @Column(name = "invoice_date")
     private LocalDateTime invoiceDate;
@@ -59,4 +62,17 @@ public class Invoice {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL)
     private List<InvoiceItem> invoiceItems;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Invoice invoice = (Invoice) o;
+        return getId() != null && Objects.equals(getId(), invoice.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

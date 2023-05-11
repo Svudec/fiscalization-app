@@ -4,7 +4,6 @@ import hr.unizg.fer.sudec.karlo.amqp.RabbitMqMessageProducer;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatus;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.FiscalizationRequestModel;
-import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.FiscalizationResultModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.InvoiceItemRepository;
@@ -13,9 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.amqp.core.Queue;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -68,9 +64,20 @@ public class InvoiceService {
         invoiceRepository.deleteById(id);
     }
 
-    public void handleFiscalizationResult(FiscalizationResultModel fiscalizationResult){
-        log.info("Received result: {}", fiscalizationResult);
-        //TODO: handle result (error/success)
+    @Transactional
+    public void handleFiscalizationResult(String invoiceNumber, boolean success, String result){
+        Invoice invoice = invoiceRepository.findInvoiceByInvoiceNumber(invoiceNumber);
+        if(success){
+            invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.FISKALIZIRANO);
+            String[] splitted = result.split("##kraj##");
+            invoice.setJir(splitted[0].replaceFirst("JIR:", ""));
+            invoice.setZki(splitted[1].replaceFirst("ZKI:", ""));
+        } else {
+            invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.NEUSPJESNO_FISKALIZIRANO);
+            invoice.setFiscalizationMessage(result);
+        }
+        invoiceRepository.save(invoice);
+
         //generate fiscalization qr code => qrCodeService.generateFiscalInvoiceQrCode(invoice);
     }
 

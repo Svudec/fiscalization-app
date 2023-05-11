@@ -8,7 +8,7 @@
 
         public override string ToString()
         {
-            return $"{InvoiceId};{Success};{Message}";
+            return $"{InvoiceId}##razmak##{Success}##razmak##{Message}";
         }
     }
 }

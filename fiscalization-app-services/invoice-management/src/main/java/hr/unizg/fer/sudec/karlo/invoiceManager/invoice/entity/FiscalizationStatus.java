@@ -1,7 +1,7 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity;
 
 public enum FiscalizationStatus{
-        FISKALIZIRANO("F"), NEUSPJEŠNO_FISKALIZIRANO("NF"), U_OBRADI("O");
+        FISKALIZIRANO("F"), NEUSPJESNO_FISKALIZIRANO("NF"), U_OBRADI("O");
 
         private final String code;
 
