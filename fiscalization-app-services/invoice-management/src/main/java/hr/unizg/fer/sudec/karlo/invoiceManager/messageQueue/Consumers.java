@@ -1,5 +1,6 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.messageQueue;
 
+import hr.unizg.fer.sudec.karlo.amqp.config.FiscalizationQueuesConfig;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service.InvoiceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 @Slf4j
-@RabbitListener(queues = "${rabbitmq.queues.fiscalization-result}")
+@RabbitListener(queues = FiscalizationQueuesConfig.fiscalizationResultQueue)
 public class Consumers {
 
     private final InvoiceService invoiceService;

@@ -20,13 +20,3 @@ spring:
     addresses: localhost:5672
   profiles:
     active: default
-
-rabbitmq:
-  exchanges:
-    internal: internal.exchange
-  queues:
-    to-fiscalization: fiscalization.queue.to
-    fiscalization-result: fiscalization.queue.result
-  routing-keys:
-    internal-to-fiscalization: internal.to-fiscalization.routing-key
-    internal-fiscalization-result: internal.fiscalization-result.routing-key

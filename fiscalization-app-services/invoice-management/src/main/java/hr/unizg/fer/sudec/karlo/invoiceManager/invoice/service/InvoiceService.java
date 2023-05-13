@@ -1,13 +1,13 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service;
 
 import hr.unizg.fer.sudec.karlo.amqp.RabbitMqMessageProducer;
+import hr.unizg.fer.sudec.karlo.amqp.config.FiscalizationQueuesConfig;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatus;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.FiscalizationRequestModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.InvoiceItem;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.InvoiceItemRepository;
-import hr.unizg.fer.sudec.karlo.invoiceManager.messageQueue.QueueParamsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -27,8 +27,6 @@ public class InvoiceService {
     private final InvoiceItemRepository itemRepository;
     private final RabbitMqMessageProducer messageProducer;
 
-    private final QueueParamsService queueParamsService;
-
     public List<InvoiceModel> getAllInvoices() {
         return mapper.map(invoiceRepository.findAll(), new TypeToken<List<InvoiceModel>>() {}.getType());
     }
@@ -45,8 +43,8 @@ public class InvoiceService {
         addItemsToInvoice(model, invoice);
         messageProducer.publish(
                 fromInvoice(invoice),
-                queueParamsService.getInternalExchange(),
-                queueParamsService.getToFiscalizationInternalRoutingKey());
+                FiscalizationQueuesConfig.internalExchange,
+                FiscalizationQueuesConfig.toFiscalizationInternalRoutingKey);
         return mapper.map(invoice, InvoiceModel.class);
     }
 

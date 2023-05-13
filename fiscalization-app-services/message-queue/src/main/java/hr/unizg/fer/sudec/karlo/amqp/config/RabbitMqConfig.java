@@ -1,4 +1,4 @@
-package hr.unizg.fer.sudec.karlo.amqp;
+package hr.unizg.fer.sudec.karlo.amqp.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
