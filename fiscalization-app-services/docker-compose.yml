@@ -1,4 +1,5 @@
 services:
+
   postgres:
     container_name: postgres
     image: postgres
@@ -13,6 +14,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -27,12 +29,16 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+
   rabbitmq:
     image: rabbitmq:3.9.11-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - spring
+
   invoice-management:
     image: svudec/invoice-management:latest
     container_name: invoice-management
@@ -40,6 +46,10 @@ services:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - postgres
+      - spring
+
   catalog-management:
     image: svudec/catalog-management:latest
     container_name: catalog-management
@@ -47,6 +57,10 @@ services:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - postgres
+      - spring
+
   fiscalization:
     image: svudec/fiscalizationnetcorewebapi:latest
     container_name: fiscalization
@@ -54,6 +68,9 @@ services:
       - "8084:8084"
     environment:
       - ASPNETCORE_ENVIRONMENT=docker
+    networks:
+      - spring
+
 networks:
   postgres:
     driver: bridge

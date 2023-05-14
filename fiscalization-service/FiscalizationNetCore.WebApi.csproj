@@ -17,5 +17,10 @@
     <ItemGroup>
         <_ContentIncludedByDefault Remove="ServiceReference\dotnet-svcutil.params.json" />
     </ItemGroup>
+    <ItemGroup>
+      <None Update="cert\FISKAL_1.p12">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 
 </Project>

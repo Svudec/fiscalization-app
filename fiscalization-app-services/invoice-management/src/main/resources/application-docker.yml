@@ -18,5 +18,3 @@ spring:
     show-sql: true
   rabbitmq:
     addresses: rabbitmq:5672
-  profiles:
-    active: default
