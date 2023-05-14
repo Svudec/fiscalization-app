@@ -49,6 +49,9 @@ services:
     networks:
       - postgres
       - spring
+    depends_on:
+      - postgres
+      - rabbitmq
 
   catalog-management:
     image: svudec/catalog-management:latest
@@ -60,6 +63,9 @@ services:
     networks:
       - postgres
       - spring
+    depends_on:
+      - postgres
+      - rabbitmq
 
   fiscalization:
     image: svudec/fiscalizationnetcorewebapi:latest
@@ -70,6 +76,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=docker
     networks:
       - spring
+    depends_on:
+      - rabbitmq
 
 networks:
   postgres:
