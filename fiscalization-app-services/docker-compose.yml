@@ -33,9 +33,31 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
+  invoice-management:
+    image: svudec/invoice-management:latest
+    container_name: invoice-management
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  catalog-management:
+    image: svudec/catalog-management:latest
+    container_name: catalog-management
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  fiscalization:
+    image: svudec/fiscalizationnetcorewebapi:latest
+    container_name: fiscalization
+    ports:
+      - "8084:8084"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=docker
 networks:
   postgres:
+    driver: bridge
+  spring:
     driver: bridge
 volumes:
   postgres:

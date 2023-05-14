@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: CatalogManagement
+  datasource:
+    url: jdbc:postgresql://postgres:5432/organization-management
+    username: karlo
+    password: lozinka
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+    show-sql: true
+  rabbitmq:
+    addresses: rabbitmq:5672
+  profiles:
+    active: default
