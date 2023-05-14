@@ -79,7 +79,7 @@
           <version>3.1.4</version>
           <configuration>
             <from>
-              <image>amazoncorretto:17.0.7</image>
+              <image>amazoncorretto:17.0.7@sha256:556cc24637289c56e84d811fe600157747d380f760612c43d9efd33da11a5ce5</image>
             </from>
             <to>
               <tags>
