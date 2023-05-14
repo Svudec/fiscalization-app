@@ -1,20 +1,20 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["FiscalizationNetCore.WebApi/FiscalizationNetCore.WebApi.csproj", "FiscalizationNetCore.WebApi/"]
-RUN dotnet restore "FiscalizationNetCore.WebApi/FiscalizationNetCore.WebApi.csproj"
+COPY ["FiscalizationNetCore.WebApi.csproj", "."]
+RUN dotnet restore "./FiscalizationNetCore.WebApi.csproj"
 COPY . .
-#ADD FiscalizationNetCore.WebApi/cert.pfx /usr/local/share/ca-certificates/cert.pfx
-#RUN chmod 644 /usr/local/share/ca-certificates/cert.pfx && update-ca-certificates
-WORKDIR "/src/FiscalizationNetCore.WebApi"
+WORKDIR "/src/."
 RUN dotnet build "FiscalizationNetCore.WebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "FiscalizationNetCore.WebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "FiscalizationNetCore.WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

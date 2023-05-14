@@ -34,30 +34,31 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
             IServiceProvider serviceProvider,
             ICertificateService certificateService)
         {
+            _serviceProvider = serviceProvider;
+            _certificateService = certificateService;
 
-            try
+            _factory = connectionFactory;
+            _factory.AutomaticRecoveryEnabled = true;
+
+            // try to connect every 10 seconds
+            while (true)
             {
-                _factory = connectionFactory;
-
-                _connection = _factory.CreateConnection();
-
-                _channel = _connection.CreateModel();
-
-                //_channel.QueueDeclare(
-                //    queue: "fiscalization.queue.to",
-                //    durable: true,
-                //    exclusive: false,
-                //    autoDelete: false,
-                //    arguments: null);
-
-                _mqPublisher = new RabbitMqPublisher(connectionFactory);
-                _serviceProvider = serviceProvider;
-                _certificateService = certificateService;
-            }
-            catch (BrokerUnreachableException)
-            {
-
-                _rabbitMQUnreachable = true;
+                Console.WriteLine("Trying to connect to RabbitMQ Broker...");
+                try
+                {
+                    _connection = _factory.CreateConnection();
+                    _channel = _connection.CreateModel();
+                    _mqPublisher = new RabbitMqPublisher(connectionFactory);
+                    _rabbitMQUnreachable = false;
+                    Console.WriteLine("Connected to RabbitMQ Broker\n");
+                    break;
+                }
+                catch (BrokerUnreachableException) 
+                {
+                    _rabbitMQUnreachable = true;
+                    Console.WriteLine("RabbitMQ Broker Unreachable!");
+                    Thread.Sleep(10000);
+                }
             }
         }
 
@@ -92,11 +93,10 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
                 await fiscalizeAsync(invoice, stoppingToken);
                 
             };
-
+            
             _channel.BasicConsume(queue: "fiscalization.queue.to", autoAck: true, consumer: consumer);
-
+            
             return Task.CompletedTask;
-
         }
 
         private async Task fiscalizeAsync(RacunType invoice, CancellationToken stoppingToken)
