@@ -1,8 +1,8 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.controller;
 
-import hr.unizg.fer.sudec.karlo.catalogManagement.entity.CatalogItemDTO;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service.InvoiceService;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.CatalogItemDTO;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.CatalogItemClient;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service;
 
-import hr.unizg.fer.sudec.karlo.catalogManagement.entity.CatalogItemDTO;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.CatalogItemDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
