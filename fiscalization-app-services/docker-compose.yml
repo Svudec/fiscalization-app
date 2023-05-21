@@ -39,45 +39,44 @@ services:
     networks:
       - spring
 
-  invoice-management:
-    image: svudec/invoice-management:latest
-    container_name: invoice-management
-    ports:
-      - "8083:8083"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - postgres
-      - spring
-    depends_on:
-      - postgres
-      - rabbitmq
-
-  catalog-management:
-    image: svudec/catalog-management:latest
-    container_name: catalog-management
-    ports:
-      - "8081:8081"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - postgres
-      - spring
-    depends_on:
-      - postgres
-      - rabbitmq
-
-  fiscalization:
-    image: svudec/fiscalizationnetcorewebapi:latest
-    container_name: fiscalization
-    ports:
-      - "8084:8084"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=docker
-    networks:
-      - spring
-    depends_on:
-      - rabbitmq
+#  invoice-management:
+#    image: svudec/invoice-management:latest
+#    container_name: invoice-management
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - postgres
+#      - spring
+#    depends_on:
+#      - postgres
+#      - rabbitmq
+#
+#  catalog-management:
+#    image: svudec/catalog-management:latest
+#    container_name: catalog-management
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - postgres
+#      - spring
+#    depends_on:
+#      - postgres
+#
+#  fiscalization:
+#    image: svudec/fiscalizationnetcorewebapi:latest
+#    container_name: fiscalization
+#    ports:
+#      - "8084:8084"
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=docker
+#    networks:
+#      - spring
+#    depends_on:
+#      - rabbitmq
 
 networks:
   postgres:
