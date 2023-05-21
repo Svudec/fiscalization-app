@@ -1,22 +1,42 @@
 package hr.unizg.fer.sudec.karlo.catalogManagement.entity;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Objects;
 
+@Entity
+@Table(name = "catalog_item")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
 public class CatalogItem {
     @Id
-    @SequenceGenerator(name = "catalog_item_sequence", sequenceName = "catalog_id_sequence")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "catalog_id_sequence")
-    private Integer id;
-    private String label;
-    private String price;
-    private String vat;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "product_number")
+    private String productNumber;
+
+    @Column(name = "gross_price")
+    private Double grossPrice;
+
+    @Column(name = "tax_percentage")
+    private Double taxPercentage;
+
+    @Column(name = "net_price")
+    private Double netPrice;
+
+    @Column(name = "quantity")
+    private Double quantity;
+
+    @Column(name = "unit")
+    private String unit;
+
+    @Column(name = "tax_category")
+    private String taxCategory;
 }

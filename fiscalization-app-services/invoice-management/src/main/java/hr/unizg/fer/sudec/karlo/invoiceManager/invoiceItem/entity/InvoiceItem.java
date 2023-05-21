@@ -1,17 +1,17 @@
 package hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity;
 
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "invoice_item")
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id", callSuper = false)
 public class InvoiceItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +47,17 @@ public class InvoiceItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        InvoiceItem that = (InvoiceItem) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
