@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,15 +37,12 @@ public class InvoiceService {
         return mapper.map(invoice, InvoiceModel.class);
     }
 
+    @Transactional
     public InvoiceModel createInvoice(InvoiceModel model) {
         Invoice invoice = mapper.map(model, Invoice.class);
-        invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.U_OBRADI);
+        invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.NIJE_ZAPOCETO);
         invoiceRepository.save(invoice);
         addItemsToInvoice(model, invoice);
-        messageProducer.publish(
-                fromInvoice(invoice),
-                FiscalizationQueuesConfig.internalExchange,
-                FiscalizationQueuesConfig.toFiscalizationInternalRoutingKey);
         return mapper.map(invoice, InvoiceModel.class);
     }
 
@@ -63,8 +61,22 @@ public class InvoiceService {
     }
 
     @Transactional
+    public InvoiceModel startFiscalizationProcess(Long invoiceId){
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find invoice with id: " + invoiceId));
+        invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.U_OBRADI);
+        messageProducer.publish(
+                fromInvoice(invoice),
+                FiscalizationQueuesConfig.internalExchange,
+                FiscalizationQueuesConfig.toFiscalizationInternalRoutingKey);
+        invoiceRepository.save(invoice);
+        return mapper.map(invoice, InvoiceModel.class);
+    }
+
+    @Transactional
     public void handleFiscalizationResult(String invoiceNumber, boolean success, String result){
-        Invoice invoice = invoiceRepository.findInvoiceByInvoiceNumber(invoiceNumber);
+        Invoice invoice = invoiceRepository.findInvoiceByInvoiceNumber(invoiceNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find invoice with number: " + invoiceNumber));
         if(success){
             invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.FISKALIZIRANO);
             String[] splitted = result.split("##kraj##");

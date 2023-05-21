@@ -30,6 +30,11 @@ public class InvoiceController {
         return invoiceService.updateInvoice(id, model);
     }
 
+    @PutMapping("/{id}/fiscalize")
+    public InvoiceModel startFiscalization(@PathVariable("id") Long id) {
+        return invoiceService.startFiscalizationProcess(id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteInvoice(@PathVariable("id") Long id) {
         invoiceService.deleteInvoice(id);
