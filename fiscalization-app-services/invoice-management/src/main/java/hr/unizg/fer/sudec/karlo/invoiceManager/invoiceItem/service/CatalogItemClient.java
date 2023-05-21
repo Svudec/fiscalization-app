@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@FeignClient(name = "catalogItem", url = "http://localhost:8081")
-public interface InvoiceItemClient {
+@FeignClient(name = "catalogItem", url = "${clients.catalog-management.url}")
+public interface CatalogItemClient {
 
     @GetMapping(path = "api/v1/catalog-item/all")
     List<CatalogItemDTO> getCatalogItems();
