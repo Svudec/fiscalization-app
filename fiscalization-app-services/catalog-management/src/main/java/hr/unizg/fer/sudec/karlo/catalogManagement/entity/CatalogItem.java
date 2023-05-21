@@ -31,9 +31,6 @@ public class CatalogItem {
     @Column(name = "net_price")
     private Double netPrice;
 
-    @Column(name = "quantity")
-    private Double quantity;
-
     @Column(name = "unit")
     private String unit;
 

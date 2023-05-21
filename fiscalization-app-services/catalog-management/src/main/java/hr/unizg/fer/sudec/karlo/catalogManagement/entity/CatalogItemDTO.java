@@ -15,7 +15,6 @@ public class CatalogItemDTO {
     private Double grossPrice;
     private Double taxPercentage;
     private Double netPrice;
-    private Double quantity;
     private String unit;
     private String taxCategory;
 }

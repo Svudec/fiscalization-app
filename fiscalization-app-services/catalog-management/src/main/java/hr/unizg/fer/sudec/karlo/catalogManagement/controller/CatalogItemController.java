@@ -4,10 +4,9 @@ import hr.unizg.fer.sudec.karlo.catalogManagement.entity.CatalogItemDTO;
 import hr.unizg.fer.sudec.karlo.catalogManagement.service.CatalogItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,9 +16,13 @@ public class CatalogItemController {
 
     private final CatalogItemService itemService;
 
+    @GetMapping("/all")
+    public List<CatalogItemDTO> getAllItems(){
+        return itemService.getItems();
+    }
+
     @PostMapping
-    public void addItem(@RequestBody CatalogItemDTO dto){
-    log.info("Creating new catalog item {}", dto);
-    itemService.createItem(dto);
+    public CatalogItemDTO addItem(@RequestBody CatalogItemDTO dto){
+    return itemService.createItem(dto);
     }
 }
