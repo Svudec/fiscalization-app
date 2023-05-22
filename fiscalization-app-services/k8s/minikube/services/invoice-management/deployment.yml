@@ -20,7 +20,7 @@ spec:
           image: svudec/invoice-management:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 8083
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kube
