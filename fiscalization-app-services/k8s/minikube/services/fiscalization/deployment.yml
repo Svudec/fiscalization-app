@@ -24,4 +24,6 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: kube
+      imagePullSecrets:
+        - name: regcred
       restartPolicy: Always
