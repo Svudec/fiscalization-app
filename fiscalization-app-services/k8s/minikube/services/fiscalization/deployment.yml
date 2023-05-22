@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiscalization
+  labels:
+    app: fiscalization
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiscalization
+  template:
+    metadata:
+      name: fiscalization
+      labels:
+        app: fiscalization
+    spec:
+      containers:
+        - name: fiscalization
+          image: svudec/fiscalizationnetcorewebapi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: kube
+      restartPolicy: Always

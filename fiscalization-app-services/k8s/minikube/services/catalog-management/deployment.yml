@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-management
+  labels:
+    app: catalog-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-management
+  template:
+    metadata:
+      name: catalog-management
+      labels:
+        app: catalog-management
+    spec:
+      containers:
+        - name: catalog-management
+          image: svudec/catalog-management:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+      restartPolicy: Always

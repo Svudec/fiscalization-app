@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoice-management
+  labels:
+    app: invoice-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invoice-management
+  template:
+    metadata:
+      name: invoice-management
+      labels:
+        app: invoice-management
+    spec:
+      containers:
+        - name: invoice-management
+          image: svudec/invoice-management:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kube
+      restartPolicy: Always
