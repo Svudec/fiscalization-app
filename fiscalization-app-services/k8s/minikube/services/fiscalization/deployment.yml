@@ -21,6 +21,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
+              protocol: TCP
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: kube

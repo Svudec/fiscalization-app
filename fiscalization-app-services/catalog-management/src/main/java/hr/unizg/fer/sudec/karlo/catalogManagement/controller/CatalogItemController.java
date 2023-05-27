@@ -10,6 +10,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping("${baseUrl.catalog}")
 @AllArgsConstructor
 public class CatalogItemController {
 

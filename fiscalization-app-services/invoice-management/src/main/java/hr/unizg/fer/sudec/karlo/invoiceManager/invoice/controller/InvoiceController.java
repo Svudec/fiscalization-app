@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("${baseUrl.invoice}")
 @AllArgsConstructor
 public class InvoiceController {
 

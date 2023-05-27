@@ -7,6 +7,6 @@ spec:
     app: invoice-management
   ports:
     - protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 8083
   type: LoadBalancer

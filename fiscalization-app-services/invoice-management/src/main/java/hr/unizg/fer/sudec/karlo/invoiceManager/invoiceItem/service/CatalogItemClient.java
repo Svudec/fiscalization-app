@@ -9,6 +9,6 @@ import java.util.List;
 @FeignClient(name = "catalogItem", url = "${clients.catalog-management.url}")
 public interface CatalogItemClient {
 
-    @GetMapping(path = "api/v1/catalog/all")
+    @GetMapping(path = "${baseUrl.catalog}/all")
     List<CatalogItemDTO> getCatalogItems();
 }
