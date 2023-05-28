@@ -2,7 +2,7 @@ package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model;
 
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatus;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.PaymentType;
-import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.model.InvoiceItemModel;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.model.CatalogItemDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,5 +50,5 @@ public class InvoiceModel {
 
     @NotEmpty(message = "Invoice needs to have at least one product.")
     @Valid
-    private List<InvoiceItemModel> invoiceItems;
+    private List<CatalogItemDTO> invoiceItems;
 }

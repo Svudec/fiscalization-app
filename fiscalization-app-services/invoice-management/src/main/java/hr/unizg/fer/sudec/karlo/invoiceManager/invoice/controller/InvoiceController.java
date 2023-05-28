@@ -2,8 +2,8 @@ package hr.unizg.fer.sudec.karlo.invoiceManager.invoice.controller;
 
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.service.InvoiceService;
-import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity.CatalogItemDTO;
-import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.CatalogItemClient;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.model.CatalogItemDTO;
+import hr.unizg.fer.sudec.karlo.invoiceManager.catalog.CatalogItemClient;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +44,8 @@ public class InvoiceController {
     }
 
     @GetMapping("/all")
-    public List<InvoiceModel> getAllInvoices() {
-        return invoiceService.getAllInvoices();
+    public List<InvoiceModel> getAllInvoices(@RequestParam(required = false, name = "catalogItemId") Long catalogItemId) {
+        return catalogItemId == null ? invoiceService.getAllInvoices() : invoiceService.getAllInvoicesWithCatalogItem(catalogItemId);
     }
 
     @GetMapping("/items")

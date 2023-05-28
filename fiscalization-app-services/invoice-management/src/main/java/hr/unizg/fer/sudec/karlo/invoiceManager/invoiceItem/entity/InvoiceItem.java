@@ -6,10 +6,14 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "invoice_item")
+@Table(name = "invoice_item",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"invoice_id", "catalog_item_id"})
+})
 @Getter
 @Setter
 public class InvoiceItem {
@@ -17,36 +21,17 @@ public class InvoiceItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "product_number")
-    private String productNumber;
-
-    @Column(name = "gross_price")
-    private Double grossPrice;
-
-    @Column(name = "tax_percentage")
-    private Double taxPercentage;
-
-    @Column(name = "net_price")
-    private Double netPrice;
-
-    @Column(name = "quantity")
-    private Double quantity;
-
-    @Column(name = "unit")
-    private String unit;
-
-    @Column(name = "tax_category")
-    private String taxCategory;
+    @Column(name = "catalog_item_id")
+    @NotNull
+    private Long catalogItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invoice_id")
+    @NotNull
     private Invoice invoice;
+
+    @Column(name = "quantity")
+    private Double quantity;
 
     @Override
     public boolean equals(Object o) {

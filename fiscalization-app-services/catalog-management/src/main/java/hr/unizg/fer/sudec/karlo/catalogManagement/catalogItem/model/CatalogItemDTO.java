@@ -1,10 +1,9 @@
-package hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.entity;
+package hr.unizg.fer.sudec.karlo.catalogManagement.catalogItem.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// THIS IS MODEL FOR OBJECT FROM catalog-management service
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

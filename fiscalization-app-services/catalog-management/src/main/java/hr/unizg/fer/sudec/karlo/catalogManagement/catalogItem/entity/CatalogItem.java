@@ -1,4 +1,4 @@
-package hr.unizg.fer.sudec.karlo.catalogManagement.entity;
+package hr.unizg.fer.sudec.karlo.catalogManagement.catalogItem.entity;
 
 import lombok.*;
 
