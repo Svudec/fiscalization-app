@@ -13,7 +13,7 @@ public class TaxCategoryModel {
     private double iznos;
 
     public void computeIznos(){
-        iznos = osnovica + (osnovica * stopaPdv);
+        iznos = osnovica + (osnovica * (stopaPdv / 100));
     }
 
     public void addToOsnovica(double valueToAdd){

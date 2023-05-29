@@ -18,9 +18,5 @@ public class InvoiceManagerApplication {
     public static void main(String[] args){
         SpringApplication.run(InvoiceManagerApplication.class, args);
     }
-    
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+
 }

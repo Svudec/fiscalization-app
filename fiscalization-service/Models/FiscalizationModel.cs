@@ -41,12 +41,12 @@ namespace FiscalizationNetCore.WebApi
                 Oib = this.Oib,
                 OibOper = this.Oib,
                 OznSlijed = oznakaSlijednosti,
-                Pdv = (PorezType[])obracunatiPorez.Select(category => new PorezType
+                Pdv = obracunatiPorez.Select(category => new PorezType
                 {
                     Stopa = category.stopaPdv.ToString("0.00", CultureInfo.InvariantCulture),
                     Osnovica = category.osnovica.ToString("0.00", CultureInfo.InvariantCulture),
                     Iznos = category.iznos.ToString("0.00", CultureInfo.InvariantCulture)
-                }),
+                }).ToArray(),
                 USustPdv = this.uSustavuPdva
             };
             return invoice;
