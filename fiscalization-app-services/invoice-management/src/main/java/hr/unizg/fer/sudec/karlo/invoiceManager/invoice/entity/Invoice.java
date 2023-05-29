@@ -62,7 +62,7 @@ public class Invoice {
     @Column(name = "qr_code")
     private String qrCode;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> invoiceItems;
 
     @Override

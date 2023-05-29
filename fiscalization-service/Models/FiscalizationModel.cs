@@ -1,38 +1,25 @@
 using ServiceReference;
 using System.Globalization;
 using System;
+using FiscalizationNetCore.WebApi.Models;
+using System.Linq;
 
 namespace FiscalizationNetCore.WebApi
 {
     public class FiscalizationModel
     {
         public string Oib { get; set; } = "21233832319"; //FIRA OIB
-
         public string brojcanaOznakaRacuna { get; set; }
-
         public string oznakaPoslovnogProstora { get; set; }
-        
         public string oznakaNaplatnogUredaja { get; set; }
-
         public string datVrijeme { get; set; }
-
         public string nacinPlacanja { get; set; }
-
         public bool naknadnaDostava { get; set; }
-
         public string oibOperatera { get; set; }
-
         public string oznakaSlijednosti { get; set; }
-
-        public double stopaPdv { get; set; }
-
-        public double osnovica { get; set; }
-
-        public double iznos { get; set; }
-
         public bool uSustavuPdva { get; set; }
-
         public double ukupanIznos { get; set; }
+        public TaxCategoryModel[] obracunatiPorez { get; set; }
 
         public RacunType ToRacunType()
         {
@@ -54,15 +41,12 @@ namespace FiscalizationNetCore.WebApi
                 Oib = this.Oib,
                 OibOper = this.Oib,
                 OznSlijed = oznakaSlijednosti,
-                Pdv = new[]
+                Pdv = (PorezType[])obracunatiPorez.Select(category => new PorezType
                 {
-                    new PorezType
-                    {
-                        Stopa = this.stopaPdv.ToString("0.00", CultureInfo.InvariantCulture),
-                        Osnovica = this.osnovica.ToString("0.00", CultureInfo.InvariantCulture),
-                        Iznos = this.iznos.ToString("0.00", CultureInfo.InvariantCulture),
-                    }
-                },
+                    Stopa = category.stopaPdv.ToString("0.00", CultureInfo.InvariantCulture),
+                    Osnovica = category.osnovica.ToString("0.00", CultureInfo.InvariantCulture),
+                    Iznos = category.iznos.ToString("0.00", CultureInfo.InvariantCulture)
+                }),
                 USustPdv = this.uSustavuPdva
             };
             return invoice;

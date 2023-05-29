@@ -8,8 +8,9 @@ import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.FiscalizationStatu
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.entity.Invoice;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.FiscalizationRequestModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.InvoiceModel;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoice.model.TaxCategoryModel;
 import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.model.CatalogItemDTO;
-import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.InvoiceItemRepository;
+import hr.unizg.fer.sudec.karlo.invoiceManager.invoiceItem.service.InvoiceItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,9 +31,9 @@ import java.util.stream.Collectors;
 public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ModelMapper mapper;
-    private final InvoiceItemRepository itemRepository;
     private final RabbitMqMessageProducer messageProducer;
     private final CatalogItemClient catalogClient;
+    private final InvoiceItemService invoiceItemService;
 
     public List<InvoiceModel> getAllInvoices() {
         return mapper.map(invoiceRepository.findAll(), new TypeToken<List<InvoiceModel>>() {}.getType());
@@ -63,6 +66,7 @@ public class InvoiceService {
                             .collect(Collectors.joining(",")));
         }
         invoice.getInvoiceItems().forEach(i -> i.setInvoice(invoice));
+        updateInvoiceInTotalField(invoice);
         invoiceRepository.save(invoice);
         return mapper.map(invoice, InvoiceModel.class);
     }
@@ -76,6 +80,7 @@ public class InvoiceService {
         }
         mapper.map(model, invoice);
         invoice.getInvoiceItems().forEach(i -> i.setInvoice(invoice));
+        updateInvoiceInTotalField(invoice);
         invoiceRepository.save(invoice);
         return mapper.map(invoice, InvoiceModel.class);
     }
@@ -89,6 +94,11 @@ public class InvoiceService {
     public InvoiceModel startFiscalizationProcess(Long invoiceId){
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + invoiceId));
+        if(invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.U_OBRADI
+                || invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.FISKALIZIRANO){
+            throw new FiscalizationGeneralException("Nije moguće poslati zahtjev za fiskalizaciju jer je račun već fiskaliziran ili u obradi!");
+        }
+
         invoice.setInvoiceFiscalizationStatus(FiscalizationStatus.U_OBRADI);
         messageProducer.publish(
                 fromInvoice(invoice),
@@ -116,6 +126,37 @@ public class InvoiceService {
         //generate fiscalization qr code => qrCodeService.generateFiscalInvoiceQrCode(invoice);
     }
 
+    public void updateInvoiceInTotalField(Invoice invoice){
+        List<TaxCategoryModel> taxCategories = getTaxCategoriesForInvoice(invoice);
+        invoice.setInTotal(taxCategories.stream().map(TaxCategoryModel::getIznos).reduce(Double::sum).orElse(null));
+    }
+    public List<TaxCategoryModel> getTaxCategoriesForInvoice(Invoice invoice){
+        List<CatalogItemDTO> invoiceItems = invoice.getInvoiceItems().stream().map(i -> mapper.map(i, CatalogItemDTO.class)).toList();
+        invoiceItemService.getInvoiceItemsDetails(invoiceItems);
+        Map<Double, TaxCategoryModel> taxCategories = new HashMap<>();
+
+        for (CatalogItemDTO invoiceItem: invoiceItems) {
+            if(taxCategories.containsKey(invoiceItem.getTaxPercentage())){
+                TaxCategoryModel taxCategory = taxCategories.get(invoiceItem.getTaxPercentage());
+                taxCategory.addToOsnovica(invoiceItem.getQuantity() * invoiceItem.getGrossPrice());
+            } else {
+                TaxCategoryModel taxCategory = new TaxCategoryModel();
+                taxCategory.setStopaPdv(invoiceItem.getTaxPercentage());
+                taxCategory.setOsnovica(invoiceItem.getQuantity() * invoiceItem.getGrossPrice());
+
+                taxCategories.put(invoiceItem.getTaxPercentage(),taxCategory);
+            }
+        }
+
+        List<TaxCategoryModel> output = new ArrayList<>();
+        for (Map.Entry<Double, TaxCategoryModel> entry: taxCategories.entrySet()) {
+            TaxCategoryModel finalObject = entry.getValue();
+            finalObject.computeIznos();
+            output.add(finalObject);
+        }
+        return output;
+    }
+
     private FiscalizationRequestModel fromInvoice(Invoice invoice){
         return FiscalizationRequestModel.builder()
                 .oib("21233832319")
@@ -127,11 +168,9 @@ public class InvoiceService {
                 .naknadnaDostava(false)
                 .oibOperatera("21233832319")
                 .oznakaSlijednosti("P")
-                .stopaPdv(25.0)
-                .osnovica(12.0)
-                .iznos(3.0)
-                .ukupanIznos(15.0)
+                .ukupanIznos(invoice.getInTotal())
                 .uSustavuPdva(true)
+                .obracunatiPorez(getTaxCategoriesForInvoice(invoice))
                 .build();
     }
 }
