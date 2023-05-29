@@ -16,7 +16,6 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
-    private final CatalogItemClient catalogItemClient;
 
     @GetMapping("/{id}")
     public InvoiceModel getInvoice(@PathVariable("id") Long id) {
@@ -38,6 +37,9 @@ public class InvoiceController {
         return invoiceService.startFiscalizationProcess(id);
     }
 
+    @GetMapping("/{id}/items")
+    public List<CatalogItemDTO> getItemsForInvoice(@PathVariable("id") Long id){ return invoiceService.getAllInvoiceItemsForInvoice(id); }
+
     @DeleteMapping("/{id}")
     public void deleteInvoice(@PathVariable("id") Long id) {
         invoiceService.deleteInvoice(id);
@@ -47,7 +49,4 @@ public class InvoiceController {
     public List<InvoiceModel> getAllInvoices(@RequestParam(required = false, name = "catalogItemId") Long catalogItemId) {
         return catalogItemId == null ? invoiceService.getAllInvoices() : invoiceService.getAllInvoicesWithCatalogItem(catalogItemId);
     }
-
-    @GetMapping("/items")
-    public List<CatalogItemDTO> getItemsForInvoice(){return catalogItemClient.getCatalogItems();}
 }

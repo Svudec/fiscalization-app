@@ -90,6 +90,11 @@ public class InvoiceService {
         invoiceRepository.deleteById(id);
     }
 
+    public List<CatalogItemDTO> getAllInvoiceItemsForInvoice(Long invoiceId){
+        List<CatalogItemDTO> items = getInvoice(invoiceId).getInvoiceItems();
+        invoiceItemService.getInvoiceItemsDetails(items);
+        return items;
+    }
     @Transactional
     public InvoiceModel startFiscalizationProcess(Long invoiceId){
         Invoice invoice = invoiceRepository.findById(invoiceId)
