@@ -2,3 +2,12 @@
   width: 100vw;
   height: 100vh;
 }
+
+.app-header {
+  background: rgb(36, 110, 233);
+  color: #e7e7e7;
+  font-size: xx-large;
+  font-weight: 600;
+  font-family: monospace;
+  letter-spacing: 0.1em;
+}

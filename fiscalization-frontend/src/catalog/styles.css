@@ -6,3 +6,19 @@
   align-items: center;
   column-gap: 15px;
 }
+
+.catalog-table-title {
+  text-align: center;
+  font-size: large;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.catalog-table-title-wrapper {
+  display: flex;
+  margin-bottom: 15px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
