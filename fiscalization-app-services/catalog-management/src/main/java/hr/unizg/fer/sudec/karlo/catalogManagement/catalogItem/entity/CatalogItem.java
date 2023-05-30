@@ -1,6 +1,7 @@
 package hr.unizg.fer.sudec.karlo.catalogManagement.catalogItem.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -40,4 +41,9 @@ public class CatalogItem {
     @NotNull
     @NotBlank
     private String unit;
+
+    @Column(name = "is_active")
+    @NotNull
+    @ColumnDefault("TRUE")
+    private Boolean isActive;
 }

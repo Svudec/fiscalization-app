@@ -20,7 +20,8 @@ public class CatalogItemController {
     public List<CatalogItemDTO> getAllItems(@RequestParam(name = "ids", required = false) List<Long> ids){
         return ids == null ? itemService.getItems() : itemService.getItemsWithId(ids);
     }
-
+    @GetMapping("/{id}")
+    public CatalogItemDTO getItem(@PathVariable Long id){ return itemService.getItem(id); }
     @PostMapping
     public CatalogItemDTO addItem(@RequestBody CatalogItemDTO dto){
     return itemService.createItem(dto);
@@ -28,4 +29,6 @@ public class CatalogItemController {
 
     @PutMapping
     public CatalogItemDTO updateItem(@RequestBody CatalogItemDTO dto){ return itemService.updateItem(dto); }
+    @DeleteMapping("/{id}")
+    public void deleteItem(@PathVariable Long id){ itemService.deleteItem(id); }
 }

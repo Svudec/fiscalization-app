@@ -17,7 +17,15 @@ export const CatalogTable = () => {
   useEffect(() => {
     axios
       .get(catalogAllUrl)
-      .then((res) => console.log(res))
+      .then((res) =>
+        setCatalogItems(
+          res.data.map((i) => ({
+            ...i,
+            grossPrice: r(i.grossPrice),
+            netPrice: r(i.grossPrice + i.grossPrice * (i.taxPercentage / 100))
+          }))
+        )
+      )
       .catch((err) => messageApi.open({ type: 'error', content: err.message }))
   }, [])
 
@@ -71,6 +79,7 @@ export const CatalogTable = () => {
           title="Akcije"
           key="actions"
           align="center"
+          width="20px"
           render={() => (
             <div className="catalog-table-action-buttons-container">
               <Button type="primary" icon={<EditOutlined />} />
