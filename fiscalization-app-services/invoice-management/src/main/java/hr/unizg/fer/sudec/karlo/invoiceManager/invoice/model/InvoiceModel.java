@@ -22,6 +22,8 @@ public class InvoiceModel {
 
     private FiscalizationStatus invoiceFiscalizationStatus;
 
+    private String fiscalizationMessage;
+
     @NotNull(message = "Invoice date cannot be null.")
     private LocalDateTime invoiceDate;
 
@@ -51,4 +53,6 @@ public class InvoiceModel {
     @NotEmpty(message = "Invoice needs to have at least one product.")
     @Valid
     private List<CatalogItemDTO> invoiceItems;
+
+    private List<TaxCategoryModel> taxCategories;
 }

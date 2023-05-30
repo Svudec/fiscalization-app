@@ -46,6 +46,7 @@ public class InvoiceService {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + id));
         InvoiceModel invoiceModel = mapper.map(invoice, InvoiceModel.class);
         invoiceItemService.getInvoiceItemsDetails(invoiceModel.getInvoiceItems());
+        invoiceModel.setTaxCategories(getTaxCategoriesForInvoice(invoiceModel.getInvoiceItems()));
         return invoiceModel;
     }
 
@@ -140,6 +141,10 @@ public class InvoiceService {
     public List<TaxCategoryModel> getTaxCategoriesForInvoice(Invoice invoice){
         List<CatalogItemDTO> invoiceItems = invoice.getInvoiceItems().stream().map(i -> mapper.map(i, CatalogItemDTO.class)).toList();
         invoiceItemService.getInvoiceItemsDetails(invoiceItems);
+        return getTaxCategoriesForInvoice(invoiceItems);
+    }
+
+    public List<TaxCategoryModel> getTaxCategoriesForInvoice(List<CatalogItemDTO> invoiceItems){
         Map<Double, TaxCategoryModel> taxCategories = new HashMap<>();
 
         for (CatalogItemDTO invoiceItem: invoiceItems) {
