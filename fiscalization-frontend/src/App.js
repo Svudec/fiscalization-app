@@ -7,7 +7,7 @@ const { Header, Content, Footer } = Layout
 function App() {
   return (
     <Layout className="rootStyles">
-      <Header className='app-header'>FISKALIZACIJA RAČUNA</Header>
+      <Header className="app-header">FISKALIZACIJA RAČUNA</Header>
       <Layout>
         {/* <Sider theme="light">left sidebar</Sider> */}
         <Content style={{ padding: '20px 40px' }}>

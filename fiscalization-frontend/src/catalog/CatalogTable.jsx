@@ -18,8 +18,8 @@ export const CatalogTable = () => {
   const [selectedItem, setSelectedItem] = useState(null)
 
   useEffect(() => {
-    if(selectedItem === null){
-        axios
+    if (selectedItem === null) {
+      axios
         .get(catalogAllUrl)
         .then((res) =>
           setCatalogItems(
@@ -35,7 +35,7 @@ export const CatalogTable = () => {
     }
   }, [selectedItem])
 
-  const handleFormSubmitted = (updatedItem) => {
+  const handleFormSubmitted = () => {
     setIsFormModalOpened(false)
     setSelectedItem(null)
   }
@@ -103,7 +103,7 @@ export const CatalogTable = () => {
                 description="Želite li trajno izbrisati proizvod?"
                 okText="DA"
                 cancelText="NE"
-                placement='left'
+                placement="left"
                 onConfirm={() => {
                   handleDeleteItem(value.id)
                 }}>

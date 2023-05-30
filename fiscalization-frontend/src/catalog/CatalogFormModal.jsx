@@ -1,5 +1,5 @@
 import { Form, Input, InputNumber, Modal, message } from 'antd'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { catalogBaseUrl, catalogUrl } from '../routes'
 import axios from 'axios'
 
@@ -29,9 +29,9 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
   const createRequest = (body) => {
     axios
       .post(catalogBaseUrl, body)
-      .then((res) => {
+      .then(() => {
         messageApi.open({ type: 'success', content: 'Uspješno kreiran novi proizvod' })
-        onOk && onOk(res.data)
+        onOk && onOk()
       })
       .catch((err) => {
         messageApi.open({ type: 'error', content: err.message })
@@ -41,9 +41,9 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
   const updateRequest = (body) => {
     axios
       .put(catalogBaseUrl, body)
-      .then((res) => {
+      .then(() => {
         messageApi.open({ type: 'success', content: 'Uspješno ažuriran proizvod' })
-        onOk && onOk(res.data)
+        onOk && onOk()
       })
       .catch((err) => {
         messageApi.open({ type: 'error', content: err.message })
