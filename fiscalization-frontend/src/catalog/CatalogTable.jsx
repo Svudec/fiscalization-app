@@ -57,7 +57,8 @@ export const CatalogTable = () => {
         expandable={{
           expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
           rowExpandable: (record) => !!record.description
-        }}>
+        }}
+        locale={{ emptyText: 'Nema proizvoda' }}>
         <Column title="Identifikator" dataIndex="productNumber" />
         <Column title="Naziv" dataIndex="name" />
         <Column title="Jedinica" dataIndex="unit" />
