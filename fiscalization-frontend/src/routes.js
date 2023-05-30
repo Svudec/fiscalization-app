@@ -1,4 +1,5 @@
 export const baseUrl = 'http://127.0.0.1'
+// export const baseUrl = 'http://localhost:8081'
 
 export const invoiceBaseUrl = baseUrl + '/api/v1/invoice'
 export const invoiceAllUrl = invoiceBaseUrl + '/all'
