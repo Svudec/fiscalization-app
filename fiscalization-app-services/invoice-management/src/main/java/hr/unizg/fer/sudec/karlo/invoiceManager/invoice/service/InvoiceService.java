@@ -44,7 +44,9 @@ public class InvoiceService {
     @Transactional
     public InvoiceModel getInvoice(Long id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + id));
-        return mapper.map(invoice, InvoiceModel.class);
+        InvoiceModel invoiceModel = mapper.map(invoice, InvoiceModel.class);
+        invoiceItemService.getInvoiceItemsDetails(invoiceModel.getInvoiceItems());
+        return invoiceModel;
     }
 
     @Transactional
