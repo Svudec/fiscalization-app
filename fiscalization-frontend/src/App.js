@@ -1,7 +1,7 @@
 import './App.css'
 import { Layout } from 'antd'
 import { CatalogTable } from './catalog/CatalogTable'
-import { Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import { InvoiceTable } from './invoice/InvoiceTable'
 
 const { Header, Content, Footer } = Layout
@@ -14,7 +14,16 @@ function App() {
         {/* <Sider theme="light">left sidebar</Sider> */}
         <Content style={{ padding: '20px 40px' }}>
           <Routes>
-            <Route path="/" element={<div>home</div>} />
+            <Route
+              path="/"
+              element={
+                <div>
+                  <Link to={'/catalog'}>Katalog</Link>
+                  <br />
+                  <Link to={'/invoices'}>Računi</Link>
+                </div>
+              }
+            />
             <Route path="/catalog" element={<CatalogTable />} />
             <Route path="/invoices" element={<InvoiceTable />} />
           </Routes>
