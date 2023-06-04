@@ -26,9 +26,9 @@ public class InvoiceController {
         return invoiceService.createInvoice(model);
     }
 
-    @PutMapping("/{id}")
-    public InvoiceModel updateInvoice(@PathVariable("id") Long id, @Valid @RequestBody InvoiceModel model) {
-        return invoiceService.updateInvoice(id, model);
+    @PutMapping()
+    public InvoiceModel updateInvoice(@Valid @RequestBody InvoiceModel model) {
+        return invoiceService.updateInvoice(model);
     }
 
     @PutMapping("/{id}/fiscalize")

@@ -41,12 +41,6 @@ public class Invoice {
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "operator_id")
-    private String operatorId;
-
-    @Column(name = "operator_oib")
-    private String operatorOIB;
-
     @Column(name = "note")
     private String note;
 

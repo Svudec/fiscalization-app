@@ -35,10 +35,6 @@ public class InvoiceModel {
 
     private String createdBy;
 
-    private String operatorId;
-
-    private String operatorOIB;
-
     @Length(max = 255, message = "exception.length255")
     private String note;
 

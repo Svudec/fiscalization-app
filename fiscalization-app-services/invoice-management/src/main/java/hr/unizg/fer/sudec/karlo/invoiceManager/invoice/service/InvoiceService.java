@@ -75,8 +75,10 @@ public class InvoiceService {
     }
 
     @Transactional
-    public InvoiceModel updateInvoice(Long id, InvoiceModel model) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + id));
+    public InvoiceModel updateInvoice(InvoiceModel model) {
+        Long invoiceId = model.getId();
+        if(invoiceId == null) { throw new FiscalizationGeneralException("Id računa ne smije biti null!"); }
+        Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + invoiceId));
         if(invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.FISKALIZIRANO
                 | invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.U_OBRADI){
             throw new FiscalizationGeneralException("Fiskalizacija je u tijeku ili je račun već fiskaliziran!");
@@ -90,6 +92,11 @@ public class InvoiceService {
 
     @Transactional
     public void deleteInvoice(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + id));
+        if(invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.FISKALIZIRANO
+                | invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.U_OBRADI){
+            throw new FiscalizationGeneralException("Fiskalizacija je u tijeku ili je račun već fiskaliziran!");
+        }
         invoiceRepository.deleteById(id);
     }
 
