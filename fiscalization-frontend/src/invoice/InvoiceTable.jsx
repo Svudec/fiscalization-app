@@ -19,6 +19,7 @@ import { invoiceAllUrl, invoiceStartFiscalizationUrl, invoiceUrl } from '../rout
 import { roundToTwoDecimalPlaces } from '../utils/generalUtils'
 import { parseISO, format } from 'date-fns'
 import { InvoiceDetails } from './InvoiceDetails'
+import { InvoiceFormModal } from './InvoiceFormModal'
 
 const r = (number) => roundToTwoDecimalPlaces(number)
 
@@ -54,9 +55,11 @@ export const InvoiceTable = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const [isFormModalOpened, setIsFormModalOpened] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
+  const [isFetching, setIsFetching] = useState(false)
 
   useEffect(() => {
     if (selectedItem === null) {
+      setIsFetching(true)
       axios
         .get(invoiceAllUrl)
         .then((res) =>
@@ -69,7 +72,10 @@ export const InvoiceTable = () => {
           )
         )
         .catch((err) => messageApi.open({ type: 'error', content: err.message }))
-        .finally(() => setSelectedItem(undefined))
+        .finally(() => {
+          setSelectedItem(undefined)
+          setIsFetching(false)
+        })
     }
   }, [selectedItem])
 
@@ -123,11 +129,8 @@ export const InvoiceTable = () => {
         rowKey="id"
         pagination={{ hideOnSinglePage: true }}
         expandable={{
-          expandedRowRender: (record) => (
-            <p style={{ margin: 0 }}>
-              <InvoiceDetails invoiceId={record.id} />
-            </p>
-          )
+          expandedRowRender: (record, indent, expanded) =>
+            expanded && !isFetching ? <InvoiceDetails invoiceId={record.id} /> : null
         }}
         locale={{ emptyText: 'Nema računa' }}>
         <Column title="Broj računa" dataIndex="invoiceNumber" />
@@ -151,38 +154,47 @@ export const InvoiceTable = () => {
               {['NIJE_ZAPOCETO', 'NEUSPJESNO_FISKALIZIRANO'].includes(
                 value.invoiceFiscalizationStatus
               ) && (
-                <Button
-                  type="primary"
-                  icon={<AuditOutlined />}
-                  onClick={() => {
-                    startFiscalization(value.id)
-                  }}>
-                  Fiskaliziraj
-                </Button>
+                <>
+                  <Button
+                    type="primary"
+                    icon={<AuditOutlined />}
+                    onClick={() => {
+                      startFiscalization(value.id)
+                    }}>
+                    Fiskaliziraj
+                  </Button>
+
+                  <Button
+                    type="primary"
+                    icon={<EditOutlined />}
+                    onClick={() => {
+                      setSelectedItem(value.id)
+                      setIsFormModalOpened(true)
+                    }}
+                  />
+                  <Popconfirm
+                    title="Jeste li sigurni?"
+                    description="Želite li trajno izbrisati račun?"
+                    okText="DA"
+                    cancelText="NE"
+                    placement="left"
+                    onConfirm={() => {
+                      handleDeleteItem(value.id)
+                    }}>
+                    <Button type="primary" icon={<DeleteOutlined />} danger />
+                  </Popconfirm>
+                </>
               )}
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  setSelectedItem(value.id)
-                  setIsFormModalOpened(true)
-                }}
-              />
-              <Popconfirm
-                title="Jeste li sigurni?"
-                description="Želite li trajno izbrisati račun?"
-                okText="DA"
-                cancelText="NE"
-                placement="left"
-                onConfirm={() => {
-                  handleDeleteItem(value.id)
-                }}>
-                <Button type="primary" icon={<DeleteOutlined />} danger />
-              </Popconfirm>
             </div>
           )}
         />
       </Table>
+      <InvoiceFormModal
+        invoiceId={selectedItem}
+        isOpen={isFormModalOpened}
+        onCancel={() => setIsFormModalOpened(false)}
+        onOk={handleFormSubmitted}
+      />
     </>
   )
 }

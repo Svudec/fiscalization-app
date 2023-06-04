@@ -76,7 +76,7 @@ export const InvoiceDetails = ({ invoiceId }) => {
             <strong>Ukupan iznos: {r(invoice.inTotal)}</strong>
           </p>
           {invoice.invoiceFiscalizationStatus === 'NEUSPJESNO_FISKALIZIRANO' && (
-            <p>Razlog pogreške: {invoice.fiscalizationMessage}</p>
+            <p style={{color: '#bb0000'}}>Razlog pogreške: {invoice.fiscalizationMessage}</p>
           )}
           <br />
           <table className="invoice-details-table">

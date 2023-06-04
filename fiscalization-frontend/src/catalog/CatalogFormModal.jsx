@@ -15,7 +15,6 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
         .catch((err) => messageApi.open({ type: 'error', content: err.message }))
     } else {
       form.setFieldsValue({
-        id: undefined,
         name: undefined,
         description: undefined,
         productNumber: undefined,
@@ -40,7 +39,7 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
 
   const updateRequest = (body) => {
     axios
-      .put(catalogBaseUrl, body)
+      .put(catalogBaseUrl, { ...body, id: catalogItemId })
       .then(() => {
         messageApi.open({ type: 'success', content: 'Uspješno ažuriran proizvod' })
         onOk && onOk()
@@ -54,7 +53,7 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
     form
       .validateFields()
       .then((values) => {
-        values.id ? updateRequest(values) : createRequest(values)
+        catalogItemId ? updateRequest(values) : createRequest(values)
       })
       .catch((errors) => {
         console.log(errors)
@@ -78,9 +77,6 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
           wrapperCol={{ span: 19 }}
           validateMessages={{ required: 'Podatak je obavezan!' }}
           form={form}>
-          <Form.Item name={'id'} hidden>
-            <Input />
-          </Form.Item>
           <Form.Item name={'name'} label="Naziv" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
