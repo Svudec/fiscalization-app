@@ -99,10 +99,11 @@ export const InvoiceTable = () => {
       .put(invoiceStartFiscalizationUrl(id))
       .then((res) => {
         const updatedIndex = invoices.findIndex((i) => i.id === id)
-        setInvoices((prev) => {
-          prev.splice(updatedIndex, 1, res.data)
-          return prev
-        })
+        setInvoices((prev) => [
+          ...prev.slice(0, updatedIndex),
+          res.data,
+          ...prev.slice(updatedIndex + 1)
+        ])
         messageApi.open({ type: 'success', content: 'Fiskalizacija je započeta' })
       })
       .catch((err) => messageApi.open({ type: 'error', content: err.message }))

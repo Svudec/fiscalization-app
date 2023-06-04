@@ -78,6 +78,9 @@ public class InvoiceService {
         Long invoiceId = model.getId();
         if(invoiceId == null) { throw new FiscalizationGeneralException("Id računa ne smije biti null!"); }
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new FiscalizationGeneralException("Ne postoji račun s id: " + invoiceId));
+        if(!model.getInvoiceNumber().equals(invoice.getInvoiceNumber()) && invoiceRepository.existsInvoiceByInvoiceNumber(model.getInvoiceNumber())){
+            throw new FiscalizationGeneralException("Već postoji račun s istim brojem računa!");
+        }
         if(invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.FISKALIZIRANO
                 | invoice.getInvoiceFiscalizationStatus() == FiscalizationStatus.U_OBRADI){
             throw new FiscalizationGeneralException("Fiskalizacija je u tijeku ili je račun već fiskaliziran!");

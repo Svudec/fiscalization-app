@@ -37,7 +37,9 @@ export const InvoiceFormModal = ({ invoiceId, isOpen, onCancel, onOk }) => {
           res.data.map((i) => ({ ...i, label: i.productNumber + ' ' + i.name, value: i.id }))
         )
       )
-      .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+      .catch((err) =>
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
+      )
   }, [])
 
   useEffect(() => {
@@ -46,7 +48,12 @@ export const InvoiceFormModal = ({ invoiceId, isOpen, onCancel, onOk }) => {
         axios
           .get(invoiceUrl(invoiceId))
           .then((res) => form.setFieldsValue(res.data))
-          .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+          .catch((err) =>
+            messageApi.open({
+              type: 'error',
+              content: err.response?.data?.errorMessage ?? err.message
+            })
+          )
       } else {
         form.setFieldsValue({
           invoiceNumber: undefined,
@@ -70,7 +77,7 @@ export const InvoiceFormModal = ({ invoiceId, isOpen, onCancel, onOk }) => {
         onOk && onOk()
       })
       .catch((err) => {
-        messageApi.open({ type: 'error', content: err.message })
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
       })
   }
 
@@ -85,7 +92,10 @@ export const InvoiceFormModal = ({ invoiceId, isOpen, onCancel, onOk }) => {
         onOk && onOk()
       })
       .catch((err) => {
-        messageApi.open({ type: 'error', content: err.message })
+        messageApi.open({
+          type: 'error',
+          content: err.response?.data?.errorMessage ?? err.message
+        })
       })
   }
 
