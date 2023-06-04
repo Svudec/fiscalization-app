@@ -68,7 +68,6 @@ public class InvoiceService {
                             .map(Object::toString)
                             .collect(Collectors.joining(",")));
         }
-        invoice.getInvoiceItems().forEach(i -> i.setInvoice(invoice));
         updateInvoiceInTotalField(invoice);
         invoiceRepository.save(invoice);
         return mapper.map(invoice, InvoiceModel.class);
@@ -84,7 +83,6 @@ public class InvoiceService {
             throw new FiscalizationGeneralException("Fiskalizacija je u tijeku ili je račun već fiskaliziran!");
         }
         mapper.map(model, invoice);
-        invoice.getInvoiceItems().forEach(i -> i.setInvoice(invoice));
         updateInvoiceInTotalField(invoice);
         invoiceRepository.save(invoice);
         return mapper.map(invoice, InvoiceModel.class);

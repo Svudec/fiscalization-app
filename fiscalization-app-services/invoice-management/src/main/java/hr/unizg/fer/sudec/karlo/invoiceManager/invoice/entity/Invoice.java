@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,6 +59,38 @@ public class Invoice {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InvoiceItem> invoiceItems;
+
+    // custom setter for invoice items because of Hibernate orphan remove,
+    // it should never create new list but manipulate existing one
+    public void setInvoiceItems(List<InvoiceItem> newItems){
+        if(this.invoiceItems == null) { this.invoiceItems = new ArrayList<>(); }
+        if(newItems.isEmpty()){
+            this.invoiceItems.clear();
+            return;
+        }
+
+        List<InvoiceItem> newItems2 = new ArrayList<>(newItems);
+        List<InvoiceItem> forDelete = new ArrayList<>();
+        this.invoiceItems.forEach(item -> {
+            boolean shouldDelete = true;
+            for (int i = 0; i < newItems2.size(); i++) {
+                InvoiceItem newItem = newItems2.get(i);
+                if (item.getCatalogItemId().equals(newItem.getCatalogItemId())) {
+                    shouldDelete = false;
+                    item.setQuantity(newItem.getQuantity());
+                    newItems2.remove(i);
+                    break;
+                }
+            }
+            if(shouldDelete) { forDelete.add(item); }
+        });
+        this.invoiceItems.removeAll(forDelete);
+        newItems2.forEach(i -> {
+            i.setInvoice(this);
+            i.setId(null);
+        });
+        this.invoiceItems.addAll(newItems2);
+    }
 
     @Override
     public boolean equals(Object o) {
