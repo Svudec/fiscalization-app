@@ -17,6 +17,9 @@ const InvoiceItems = ({ items }) => (
         <td>{item.quantity}</td>
         <td>{item.unit}</td>
         <td>{r(item.grossPrice + item.grossPrice * (item.taxPercentage / 100))}</td>
+        <td>
+          {r((item.grossPrice + item.grossPrice * (item.taxPercentage / 100)) * item.quantity)}
+        </td>
       </tr>
     ))}
   </>
@@ -43,7 +46,12 @@ export const InvoiceDetails = ({ invoiceId }) => {
       axios
         .get(invoiceUrl(invoiceId))
         .then((res) => setInvoice(res.data))
-        .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+        .catch((err) =>
+          messageApi.open({
+            type: 'error',
+            content: err.response?.data?.errorMessage ?? err.message
+          })
+        )
     }
   }, [])
 
@@ -54,7 +62,9 @@ export const InvoiceDetails = ({ invoiceId }) => {
         <div className="invoice-details">
           <h1>Račun broj: {invoice.invoiceNumber}</h1>
           <div className="invoice-details-grid">
-            <p>Datum izdavanja: {format(parseISO(invoice.invoiceDate), 'dd.MM.yyyy. HH:mm')}</p>
+            <p>
+              Datum izdavanja: {format(parseISO(invoice.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm')}
+            </p>
             <p>Način plaćanja: {invoice.paymentType}</p>
             <p>Operator: {invoice.createdBy}</p>
             <p>Operator ID: {invoice.operatorId}</p>
@@ -87,7 +97,8 @@ export const InvoiceDetails = ({ invoiceId }) => {
                 <th>Proizvod</th>
                 <th>Količina</th>
                 <th>Obračunska jedinica</th>
-                <th>Cijena (NETO)</th>
+                <th>Cijena po jedinici (NETO)</th>
+                <th>Ukupna cijena</th>
               </tr>
             </thead>
             <tbody>

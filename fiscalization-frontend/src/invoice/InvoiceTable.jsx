@@ -67,11 +67,16 @@ export const InvoiceTable = () => {
             res.data.map((i) => ({
               ...i,
               inTotal: r(i.inTotal),
-              invoiceDate: format(parseISO(i.invoiceDate), 'dd.MM.yyyy. HH:mm')
+              invoiceDate: format(parseISO(i.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm')
             }))
           )
         )
-        .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+        .catch((err) =>
+          messageApi.open({
+            type: 'error',
+            content: err.response?.data?.errorMessage ?? err.message
+          })
+        )
         .finally(() => {
           setSelectedItem(undefined)
           setIsFetching(false)
@@ -91,7 +96,9 @@ export const InvoiceTable = () => {
         setInvoices((prev) => prev.filter((item) => item.id !== id))
         messageApi.open({ type: 'success', content: 'Brisanje uspješno' })
       })
-      .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+      .catch((err) =>
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
+      )
   }
 
   const startFiscalization = (id) => {
@@ -106,7 +113,9 @@ export const InvoiceTable = () => {
         ])
         messageApi.open({ type: 'success', content: 'Fiskalizacija je započeta' })
       })
-      .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+      .catch((err) =>
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
+      )
   }
 
   return (

@@ -12,7 +12,12 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
       axios
         .get(catalogUrl(catalogItemId))
         .then((res) => form.setFieldsValue(res.data))
-        .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+        .catch((err) =>
+          messageApi.open({
+            type: 'error',
+            content: err.response?.data?.errorMessage ?? err.message
+          })
+        )
     } else {
       form.setFieldsValue({
         name: undefined,
@@ -33,7 +38,7 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
         onOk && onOk()
       })
       .catch((err) => {
-        messageApi.open({ type: 'error', content: err.message })
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
       })
   }
 
@@ -45,7 +50,7 @@ export const CatalogFormModal = ({ catalogItemId, isOpened, onCancel, onOk }) =>
         onOk && onOk()
       })
       .catch((err) => {
-        messageApi.open({ type: 'error', content: err.message })
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
       })
   }
 

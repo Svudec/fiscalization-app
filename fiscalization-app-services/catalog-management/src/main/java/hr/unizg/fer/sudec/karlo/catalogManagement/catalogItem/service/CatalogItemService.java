@@ -20,8 +20,8 @@ public class CatalogItemService {
     private final InvoiceClient invoiceClient;
     @Transactional
     public CatalogItemDTO createItem(CatalogItemDTO dto) {
-        if(dto.getId() != null && itemRepository.existsByIdAndIsActiveIsTrue(dto.getId())){
-            throw new FiscalizationGeneralException("Već postoji stavka s id: " + dto.getId());
+        if(dto.getId() != null && itemRepository.existsByProductNumberAndIsActiveIsTrue(dto.getProductNumber())){
+            throw new FiscalizationGeneralException("Već postoji proizvod s identifikatorom: " + dto.getProductNumber());
         }
         CatalogItem newItem = mapper.map(dto, CatalogItem.class);
         newItem.setIsActive(true);
@@ -46,6 +46,10 @@ public class CatalogItemService {
     public CatalogItemDTO updateItem(CatalogItemDTO dto){
         CatalogItem item = itemRepository.findByIdAndIsActiveIsTrue(dto.getId())
                 .orElseThrow(() -> new FiscalizationGeneralException("Ne postoji proizvod ili nije aktivan s id: " + dto.getId()));
+        if(!dto.getProductNumber().equals(item.getProductNumber()) && itemRepository.existsByProductNumberAndIsActiveIsTrue(dto.getProductNumber())){
+            throw new FiscalizationGeneralException("Već postoji proizvod s identifikatorom: " + dto.getProductNumber());
+        }
+
         // if it is used in invoices, create new one instead of updating
         if(invoiceClient.getInvoicesWithItem(item.getId()).isEmpty()){
             mapper.map(dto, item);

@@ -1,29 +1,39 @@
 import './App.css'
-import { Layout } from 'antd'
+import { Layout, Menu } from 'antd'
 import { CatalogTable } from './catalog/CatalogTable'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { InvoiceTable } from './invoice/InvoiceTable'
+import { BarcodeOutlined, FileTextOutlined } from '@ant-design/icons'
 
 const { Header, Content, Footer } = Layout
 
+const menuItems = [
+  { label: 'Katalog', key: 'catalog', icon: <BarcodeOutlined /> },
+  { label: 'Računi', key: 'invoices', icon: <FileTextOutlined /> }
+]
+
 function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   return (
     <Layout className="rootStyles">
-      <Header className="app-header">FISKALIZACIJA RAČUNA</Header>
+      <Header className="header">
+        <div className="app-header">FISKALIZACIJA RAČUNA</div>
+        <Menu
+          style={{ width: '230px' }}
+          selectedKeys={[location.pathname.slice(1)]}
+          mode="horizontal"
+          items={menuItems}
+          onClick={(item) => {
+            navigate('/' + item.key)
+          }}
+        />
+      </Header>
       <Layout>
         {/* <Sider theme="light">left sidebar</Sider> */}
         <Content style={{ padding: '20px 40px' }}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div>
-                  <Link to={'/catalog'}>Katalog</Link>
-                  <br />
-                  <Link to={'/invoices'}>Računi</Link>
-                </div>
-              }
-            />
+            <Route path="/" element={<Navigate to={'/invoices'} replace />} />
             <Route path="/catalog" element={<CatalogTable />} />
             <Route path="/invoices" element={<InvoiceTable />} />
           </Routes>

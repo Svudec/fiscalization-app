@@ -3,6 +3,17 @@
   height: 100vh;
 }
 
+.header {
+  display: flex;
+  background: rgb(36, 110, 233);
+  color: rgb(231, 231, 231);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0 50px;
+}
+
 .app-header {
   background: rgb(36, 110, 233);
   color: #e7e7e7;

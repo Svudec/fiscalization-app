@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CatalogItemRepository extends JpaRepository<CatalogItem, Long> {
-    boolean existsByIdAndIsActiveIsTrue(Long id);
+    boolean existsByProductNumberAndIsActiveIsTrue(String productNumber);
     List<CatalogItem> findAllByIsActiveIsTrue();
     Optional<CatalogItem> findByIdAndIsActiveIsTrue(Long id);
 }

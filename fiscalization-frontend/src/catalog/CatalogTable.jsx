@@ -30,7 +30,12 @@ export const CatalogTable = () => {
             }))
           )
         )
-        .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+        .catch((err) =>
+          messageApi.open({
+            type: 'error',
+            content: err.response?.data?.errorMessage ?? err.message
+          })
+        )
         .finally(() => setSelectedItem(undefined))
     }
   }, [selectedItem])
@@ -47,7 +52,9 @@ export const CatalogTable = () => {
         setCatalogItems((prev) => prev.filter((item) => item.id !== id))
         messageApi.open({ type: 'success', content: 'Brisanje uspješno' })
       })
-      .catch((err) => messageApi.open({ type: 'error', content: err.message }))
+      .catch((err) =>
+        messageApi.open({ type: 'error', content: err.response?.data?.errorMessage ?? err.message })
+      )
   }
 
   return (

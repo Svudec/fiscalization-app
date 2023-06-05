@@ -12,7 +12,7 @@ root.render(
     <BrowserRouter>
       <ConfigProvider
         theme={{
-          token: {}
+          token: { colorPrimary: 'rgb(36, 110, 233)' }
         }}>
         {' '}
         <App />
