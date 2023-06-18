@@ -5,7 +5,7 @@ metadata:
   labels:
     app: invoice-management
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: invoice-management
