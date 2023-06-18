@@ -12,6 +12,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Optional<Invoice> findInvoiceByInvoiceNumber(String invoiceNumber);
     boolean existsInvoiceByInvoiceNumber(String invoiceNumber);
-    @Query("SELECT i FROM Invoice i JOIN i.invoiceItems ii WHERE ii.catalogItemId = :catalogItemId")
+    @Query("SELECT i FROM Invoice i JOIN i.invoiceItems ii WHERE ii.catalogItemId = :catalogItemId ORDER BY i.invoiceDate DESC")
     List<Invoice> findInvoicesByCatalogItemId(@Param("catalogItemId") Long catalogItemId);
+    List<Invoice> findAllByOrderByInvoiceDateDesc();
 }

@@ -35,7 +35,7 @@ public class CatalogItemService {
         return mapper.map(item, CatalogItemDTO.class);
     }
     public List<CatalogItemDTO> getItems(){
-        return itemRepository.findAllByIsActiveIsTrue().stream().map((element) -> mapper.map(element, CatalogItemDTO.class)).collect(Collectors.toList());
+        return itemRepository.findAllByIsActiveIsTrueOrderByProductNumber().stream().map((element) -> mapper.map(element, CatalogItemDTO.class)).collect(Collectors.toList());
     }
 
     public List<CatalogItemDTO> getItemsWithId(Iterable<Long> ids){

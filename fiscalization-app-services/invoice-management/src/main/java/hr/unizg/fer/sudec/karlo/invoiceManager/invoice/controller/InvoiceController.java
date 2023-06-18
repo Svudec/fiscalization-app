@@ -26,7 +26,7 @@ public class InvoiceController {
         return invoiceService.createInvoice(model);
     }
 
-    @PutMapping()
+    @PutMapping
     public InvoiceModel updateInvoice(@Valid @RequestBody InvoiceModel model) {
         return invoiceService.updateInvoice(model);
     }

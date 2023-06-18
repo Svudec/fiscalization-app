@@ -36,7 +36,7 @@ public class InvoiceService {
     private final InvoiceItemService invoiceItemService;
 
     public List<InvoiceModel> getAllInvoices() {
-        return mapper.map(invoiceRepository.findAll(), new TypeToken<List<InvoiceModel>>() {}.getType());
+        return mapper.map(invoiceRepository.findAllByOrderByInvoiceDateDesc(), new TypeToken<List<InvoiceModel>>() {}.getType());
     }
     public List<InvoiceModel> getAllInvoicesWithCatalogItem(Long catalogItemId) {
         return mapper.map(invoiceRepository.findInvoicesByCatalogItemId(catalogItemId), new TypeToken<List<InvoiceModel>>() {}.getType());

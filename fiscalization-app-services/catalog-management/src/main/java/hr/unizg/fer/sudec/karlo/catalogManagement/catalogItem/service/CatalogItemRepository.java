@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface CatalogItemRepository extends JpaRepository<CatalogItem, Long> {
     boolean existsByProductNumberAndIsActiveIsTrue(String productNumber);
-    List<CatalogItem> findAllByIsActiveIsTrue();
+    List<CatalogItem> findAllByIsActiveIsTrueOrderByProductNumber();
     Optional<CatalogItem> findByIdAndIsActiveIsTrue(Long id);
 }
