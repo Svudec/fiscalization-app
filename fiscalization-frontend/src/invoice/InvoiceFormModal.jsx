@@ -145,6 +145,8 @@ export const InvoiceFormModal = ({ invoiceId, isOpen, onCancel, onOk }) => {
             <Radio.Group>
               <Radio value={'KARTICA'}>Kartica</Radio>
               <Radio value={'GOTOVINA'}>Gotovina</Radio>
+              <Radio value={'CEK'}>Ček</Radio>
+              <Radio value={'TRANSAKCIJSKI_RACUN'}>Transakcijski račun</Radio>
               <Radio value={'OSTALO'}>Ostalo</Radio>
             </Radio.Group>
           </Form.Item>
