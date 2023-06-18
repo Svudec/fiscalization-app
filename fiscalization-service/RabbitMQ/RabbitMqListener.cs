@@ -90,15 +90,19 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
 
                 var invoice = obj.ToRacunType();
 
-                Console.WriteLine("Započinjem simulaciju zahtjevnog računanja (10 sekundi čekam)");
-                Thread.Sleep(10000);
+                Console.WriteLine("Započinjem simulaciju zahtjevnog računanja (1 minutu čekam)");
+                Thread.Sleep(30000);
                 Console.WriteLine("Čekanje završeno");
                 await fiscalizeAsync(invoice, stoppingToken);
-                
+
+                // Manually acknowledge the message
+                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
-            
-            _channel.BasicConsume(queue: "fiscalization.queue.to", autoAck: true, consumer: consumer);
-            
+
+            // consume the message without auto acknowledge and consume one by one
+            _channel.BasicQos(0, 1, false);
+            _channel.BasicConsume(queue: "fiscalization.queue.to", autoAck: false, consumer: consumer);
+
             return Task.CompletedTask;
         }
 
