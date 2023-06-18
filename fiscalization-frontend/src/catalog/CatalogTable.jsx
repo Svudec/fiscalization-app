@@ -76,7 +76,7 @@ export const CatalogTable = () => {
         bordered
         dataSource={catalogItems}
         rowKey="id"
-        pagination={{ hideOnSinglePage: true }}
+        pagination={{ hideOnSinglePage: true, pageSize: 8 }}
         expandable={{
           expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
           rowExpandable: (record) => !!record.description

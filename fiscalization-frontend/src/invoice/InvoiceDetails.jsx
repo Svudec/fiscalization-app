@@ -8,6 +8,21 @@ import './styles.css'
 
 const r = (number) => roundToTwoDecimalPlaces(number)
 
+export const nacinPlacanjaToString = (ulaz) => {
+  switch (ulaz) {
+    case 'KARTICA':
+      return 'Bankovna kartica'
+    case 'CEK':
+      return 'Ček'
+    case 'TRANSAKCIJSKI_RACUN':
+      return 'Transakcijski račun'
+    case 'GOTOVINA':
+      return 'Gotovina'
+    default:
+      return 'Ostalo'
+  }
+}
+
 const InvoiceItems = ({ items }) => (
   <>
     {items.map((item) => (
@@ -60,14 +75,18 @@ export const InvoiceDetails = ({ invoiceId }) => {
       {contextHolder}
       {invoice ? (
         <div className="invoice-details">
+          <div>
+            <p>FIRA Solutions d.o.o.</p>
+            <p>Trg Josipa Jurja Strossmayera 8, 10000 Zagreb</p>
+            <p>OIB: 21233832319</p>
+          </div>
           <h1>Račun broj: {invoice.invoiceNumber}</h1>
           <div className="invoice-details-grid">
             <p>
               Datum izdavanja: {format(parseISO(invoice.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm')}
             </p>
-            <p>Način plaćanja: {invoice.paymentType}</p>
+            <p>Način plaćanja: {nacinPlacanjaToString(invoice.paymentType)}</p>
             <p>Operator: {invoice.createdBy}</p>
-            <p>Operator ID: {invoice.operatorId}</p>
             {invoice.invoiceFiscalizationStatus === 'FISKALIZIRANO' && (
               <>
                 <p>ZKI: {invoice.zki}</p>

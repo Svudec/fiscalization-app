@@ -18,7 +18,7 @@ import axios from 'axios'
 import { invoiceAllUrl, invoiceStartFiscalizationUrl, invoiceUrl } from '../routes'
 import { roundToTwoDecimalPlaces } from '../utils/generalUtils'
 import { parseISO, format } from 'date-fns'
-import { InvoiceDetails } from './InvoiceDetails'
+import { InvoiceDetails, nacinPlacanjaToString } from './InvoiceDetails'
 import { InvoiceFormModal } from './InvoiceFormModal'
 
 const r = (number) => roundToTwoDecimalPlaces(number)
@@ -67,7 +67,8 @@ export const InvoiceTable = () => {
             res.data.map((i) => ({
               ...i,
               inTotal: r(i.inTotal),
-              invoiceDate: format(parseISO(i.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm')
+              invoiceDate: format(parseISO(i.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm'),
+              paymentType: nacinPlacanjaToString(i.paymentType)
             }))
           )
         )
@@ -108,7 +109,12 @@ export const InvoiceTable = () => {
         const updatedIndex = invoices.findIndex((i) => i.id === id)
         setInvoices((prev) => [
           ...prev.slice(0, updatedIndex),
-          res.data,
+          {
+            ...res.data,
+            inTotal: r(res.data.inTotal),
+            invoiceDate: format(parseISO(res.data.invoiceDate + 'Z'), 'dd.MM.yyyy. HH:mm'),
+            paymentType: nacinPlacanjaToString(res.data.paymentType)
+          },
           ...prev.slice(updatedIndex + 1)
         ])
         messageApi.open({ type: 'success', content: 'Fiskalizacija je započeta' })
@@ -137,7 +143,7 @@ export const InvoiceTable = () => {
         bordered
         dataSource={invoices}
         rowKey="id"
-        pagination={{ hideOnSinglePage: true }}
+        pagination={{ hideOnSinglePage: true, pageSize: 8 }}
         expandable={{
           expandedRowRender: (record, indent, expanded) =>
             expanded && !isFetching ? <InvoiceDetails invoiceId={record.id} /> : null
