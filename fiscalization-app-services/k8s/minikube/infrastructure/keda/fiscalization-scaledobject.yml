@@ -14,7 +14,7 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      host: amqp://10.109.13.158:5672/
+      host: amqp://rabbitmq.default.svc.cluster.local:5672/
       mode: QueueLength
       value: "1"
       queueName: "fiscalization.queue.to"

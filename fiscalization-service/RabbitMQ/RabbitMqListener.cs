@@ -90,6 +90,9 @@ namespace FiscalizationNetCore.WebApi.RabbitMQ
 
                 var invoice = obj.ToRacunType();
 
+                Console.WriteLine("Započinjem simulaciju zahtjevnog računanja (10 sekundi čekam)");
+                Thread.Sleep(10000);
+                Console.WriteLine("Čekanje završeno");
                 await fiscalizeAsync(invoice, stoppingToken);
                 
             };
