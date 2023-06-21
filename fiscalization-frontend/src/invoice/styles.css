@@ -34,6 +34,9 @@ table caption {
   padding: 8px;
   text-align: left;
 }
+.right {
+  text-align: right !important;
+}
 
 .invoice-details-table th {
   background-color: #f2f2f2;
@@ -70,15 +73,15 @@ table caption {
   grid-template-columns: 10fr 5fr 1fr;
   align-items: baseline;
 
-  .anticon{
+  .anticon {
     justify-content: flex-end;
     align-self: baseline;
   }
 }
 
-.invoice-form-modal-product-row-add-button{
+.invoice-form-modal-product-row-add-button {
   width: 100%;
-  .ant-col.ant-col-20{
+  .ant-col.ant-col-20 {
     max-width: 100%;
   }
 }

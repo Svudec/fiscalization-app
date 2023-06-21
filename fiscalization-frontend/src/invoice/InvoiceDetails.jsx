@@ -29,10 +29,12 @@ const InvoiceItems = ({ items }) => (
       <tr key={item.id}>
         <td>{item.productNumber}</td>
         <td>{item.name}</td>
-        <td>{item.quantity}</td>
-        <td>{item.unit}</td>
-        <td>{r(item.grossPrice + item.grossPrice * (item.taxPercentage / 100))}</td>
-        <td>
+        <td className="right">{item.quantity}</td>
+        <td className="right">{item.unit}</td>
+        <td className="right">
+          {r(item.grossPrice + item.grossPrice * (item.taxPercentage / 100))}
+        </td>
+        <td className="right">
           {r((item.grossPrice + item.grossPrice * (item.taxPercentage / 100)) * item.quantity)}
         </td>
       </tr>
@@ -44,9 +46,9 @@ const TaxBreakdown = ({ categories }) => (
   <>
     {categories.map((category, index) => (
       <tr key={index}>
-        <td>{r(category.osnovica)}</td>
-        <td>{category.stopaPdv}%</td>
-        <td>{r(category.iznos)}</td>
+        <td className="right">{r(category.osnovica)}</td>
+        <td className="right">{category.stopaPdv}%</td>
+        <td className="right">{r(category.iznos)}</td>
       </tr>
     ))}
   </>
@@ -114,10 +116,10 @@ export const InvoiceDetails = ({ invoiceId }) => {
               <tr>
                 <th>Oznaka</th>
                 <th>Proizvod</th>
-                <th>Količina</th>
-                <th>Obračunska jedinica</th>
-                <th>Cijena po jedinici (NETO)</th>
-                <th>Ukupna cijena</th>
+                <th className="right">Količina</th>
+                <th className="right">Obračunska jedinica</th>
+                <th className="right">Cijena po jedinici (NETO)</th>
+                <th className="right">Ukupna cijena</th>
               </tr>
             </thead>
             <tbody>
@@ -129,9 +131,9 @@ export const InvoiceDetails = ({ invoiceId }) => {
             <caption>Obračunati porez:</caption>
             <thead>
               <tr>
-                <th>Osnovica</th>
-                <th>Stopa</th>
-                <th>Iznos</th>
+                <th className="right">Osnovica</th>
+                <th className="right">Stopa</th>
+                <th className="right">Iznos</th>
               </tr>
             </thead>
             <tbody>
