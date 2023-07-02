@@ -18,7 +18,7 @@ spec:
       containers:
         - name: invoice-management
           image: svudec/invoice-management:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8083
               protocol: TCP

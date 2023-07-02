@@ -18,7 +18,7 @@ spec:
       containers:
         - name: catalog-management
           image: svudec/catalog-management:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
               protocol: TCP
